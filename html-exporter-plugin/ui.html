@@ -1,0 +1,14 @@
+<h2>HTML Exporter</h2>
+<button id="export">Export</button>
+<button id="cancel">Cancel</button>
+<script>
+
+document.getElementById('export').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'export-component' } }, '*')
+}
+
+document.getElementById('cancel').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+}
+
+</script>

@@ -1,0 +1,10 @@
+{
+  "name": "html-exporter-plugin",
+  "id": "1199459804871072486",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": [
+    "figma"
+  ],
+  "ui": "ui.html"
+}

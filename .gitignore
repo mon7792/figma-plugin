@@ -1,0 +1,11 @@
+
+# browser-min-js
+browser-min-js/node_modules
+browser-min-js/dist
+
+# html-exporter-plugin
+html-exporter-plugin/node_modules
+
+
+# my-first-plugin
+my-first-plugin/node_modules
