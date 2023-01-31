@@ -18,7 +18,7 @@ export const Typography = ({ type }) => {
       className = "typography-medium";
       break;
   }
-  className = `${className} color-shade-native-dark-font`
+  className = `${className} color-shade-bloo-10-dark-font`
   return <div className={className}>AaBbCcDdEeGgNn 1234567890</div>;
 };
 
