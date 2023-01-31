@@ -1,0 +1,25 @@
+.color-tile {
+  width: 100px;
+  height: 100px;
+  border-radius: 24px;
+}
+
+.color-native{
+  background-color: #00253A;
+}
+
+.color-bloo-30{
+  background-color: #00314D;
+}
+
+.color-bloo-20{
+  background-color: #044468;
+}
+
+.color-bloo-10{
+  background-color: #52C1FF;
+}
+
+.color-primary{
+  background-color: #03A4FF;
+}

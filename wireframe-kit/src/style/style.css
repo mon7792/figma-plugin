@@ -1,0 +1,81 @@
+/* 
+COLOR SHADES 
+*/
+.color-shade-tile {
+  width: 100px;
+  height: 100px;
+  border-radius: 24px;
+}
+
+/* DARK MODE */
+.color-shade-native-dark {
+  background-color: #00253a;
+}
+
+.color-shade-bloo-30-dark {
+  background-color: #00314d;
+}
+
+.color-shade-bloo-20-dark {
+  background-color: #044468;
+}
+
+.color-shade-bloo-10-dark {
+  background-color: #52c1ff;
+}
+
+.color-shade-primary-dark {
+  background-color: #03a4ff;
+}
+
+/* FONT COLOR */
+.color-shade-native-dark-font{
+  color: #00253a;
+}
+
+/* 
+TEXT BLOCK
+*/
+.text-block-large {
+  width: 120px;
+  height: 18px;
+  border-radius: 9px;
+}
+
+.text-block-medium {
+  width: 120px;
+  height: 12px;
+  border-radius: 6px;
+}
+
+.text-block-small {
+  width: 120px;
+  height: 8px;
+  border-radius: 6px;
+}
+/*
+TYPOGRAPHY 
+*/
+.typography-bold {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 40px;
+}
+
+.typography-semi-bold {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 40px;
+}
+
+.typography-medium {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 48px;
+}

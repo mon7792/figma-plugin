@@ -15,11 +15,13 @@ figma.ui.onmessage = msg => {
     // HTML 
     // const nd: SceneNode = figma.currentPage.selection[0]
 
-    const ndInst: RectangleNode = figma.currentPage.selection[0] as RectangleNode
+    console.log(figma.currentPage.selection[0])
+
+    // const ndInst: RectangleNode = figma.currentPage.selection[0] as RectangleNode
 
     // console.log(ndInst)
     // console.log(ndInst.fills)
-    ndInst.fills = [{type: 'SOLID', color: {r: 0, g: 0.5, b: 1}}];
+    // ndInst.fills = [{type: 'SOLID', color: {r: 0, g: 0.5, b: 1}}];
     
 
 
@@ -47,3 +49,8 @@ figma.ui.onmessage = msg => {
   figma.closePlugin();
 };
 
+
+
+// 1. Select the component.
+// 2. Clone the component.
+// 3. check the type.
