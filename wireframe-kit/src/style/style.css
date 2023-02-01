@@ -92,9 +92,51 @@ IMAGE BOX
   gap: 10px;
   width: 375px;
   height: 370px;
+  background: #00314D;
+  border: 2px solid #03A4FF;
 }
 
 .image-box-icon {
   width: 77.68px;
   height: 63.33px;
+}
+
+/* 
+Shape
+*/
+.shape-square{
+  width: 100px;
+  height: 100px;
+  background: #044468;
+  border: 2px solid #03A4FF;
+}
+
+.shape-circle{
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  background: #044468;
+  border: 2px solid #03A4FF;
+}
+
+.shape-triangle{
+  width: 0;
+  height: 0;
+  position: relative;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 100px solid #044468;
+}
+
+.shape-triangle:before{
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-left: 48px solid transparent;
+  border-right: 48px solid transparent;
+  border-bottom: 97px solid red;
+  /* border-top: solid 48px white; */
+  top: 2px;
+  left: -48px;
 }

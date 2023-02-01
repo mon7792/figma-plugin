@@ -8,7 +8,7 @@ import Picture from "../../assets/icon/Picture.svg"
  */
 export const ImageBox = ({}) => {
   return (
-    <div className="image-box-tile color-shade-bloo-30-dark">
+    <div className="image-box-tile">
       <img className="image-box-icon" src={Picture} />
     </div>
   );
