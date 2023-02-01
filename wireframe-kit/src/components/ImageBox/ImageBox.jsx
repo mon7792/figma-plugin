@@ -1,19 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import '../../style/style.css';
+
+import Picture from "../../assets/icon/Picture.svg"
 
 /**
  * Primary UI component for user interaction
  */
-export const ImageBox = ({ size, color }) => {
-  let className = ``
+export const ImageBox = ({}) => {
   return (
-    <div className={className}></div>
+    <div className="image-box-tile color-shade-bloo-30-dark">
+      <img className="image-box-icon" src={Picture} />
+    </div>
   );
 };
-
-
-ImageBox.propTypes = {};
-  
-ImageBox.defaultProps = {};
   
