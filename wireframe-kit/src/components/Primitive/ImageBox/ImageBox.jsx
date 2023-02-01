@@ -1,7 +1,7 @@
 import React from 'react';
-import '../../style/style.css';
+import '../../../style/style.css';
 
-import Picture from "../../assets/icon/Picture.svg"
+import Picture from "../../../assets/icon/Picture.svg"
 
 /**
  * Primary UI component for user interaction

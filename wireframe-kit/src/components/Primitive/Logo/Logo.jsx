@@ -1,7 +1,7 @@
 import React from 'react';
-import '../../style/style.css';
+import '../../../style/style.css';
 
-import Bloo from "../../assets/icon/Bloo.svg"
+import Bloo from "../../../assets/icon/Bloo.svg"
 
 export const Logo = ({}) => {
   return (

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TextBlock } from "../components/TextBlock/TextBlock";
+import { TextBlock } from "../components/Primitive/TextBlock/TextBlock";
 
 export default {
   title: "Primitive/TextBlock",

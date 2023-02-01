@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageBox } from "../components/ImageBox/ImageBox";
+import { ImageBox } from "../components/Primitive/ImageBox/ImageBox";
 
 export default {
   title: 'Primitive/ImageBox',

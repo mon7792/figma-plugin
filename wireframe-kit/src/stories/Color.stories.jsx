@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Color } from "../components/Color/Color";
+import { Color } from "../components/Primitive/Color/Color";
 
 export default {
   title: "Primitive/Color",

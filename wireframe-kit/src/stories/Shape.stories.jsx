@@ -1,5 +1,5 @@
 import React from "react";
-import { Shape } from "../components/Shape/Shape";
+import { Shape } from "../components/Primitive/Shape/Shape";
 
 export default {
   title: 'Primitive/Shape',

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Placeholder } from "../components/Placeholder/Placeholder";
+import { Placeholder } from "../components/Primitive/Placeholder/Placeholder";
 
 export default {
   title: "Primitive/Placeholder",

@@ -1,16 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
-import "../../style/style.css";
+import "../../../style/style.css";
 
-import Picture from "../../assets/icon/Picture.svg";
-import User from "../../assets/icon/User.svg";
-import File from "../../assets/icon/File.svg";
-import Folder from "../../assets/icon/Folder.svg";
-import Map from "../../assets/icon/Map.svg";
-import Play from "../../assets/icon/Play.svg";
-import Tag from "../../assets/icon/Tag.svg";
-import Music from "../../assets/icon/Music.svg";
-import Process from "../../assets/icon/Process.svg";
+import Picture from "../../../assets/icon/Picture.svg";
+import User from "../../../assets/icon/User.svg";
+import File from "../../../assets/icon/File.svg";
+import Folder from "../../../assets/icon/Folder.svg";
+import Map from "../../../assets/icon/Map.svg";
+import Play from "../../../assets/icon/Play.svg";
+import Tag from "../../../assets/icon/Tag.svg";
+import Music from "../../../assets/icon/Music.svg";
+import Process from "../../../assets/icon/Process.svg";
 
 /**
  * Primary UI component for user interaction
