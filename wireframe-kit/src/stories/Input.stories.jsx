@@ -15,10 +15,24 @@ export default {
 
 const Template = (args) => <Input {...args} />;
 export const TextBlock = Template.bind({});
+TextBlock.args = {
+  instance: "TextBlock"
+};
 
 export const Blank = Template.bind({});
+Blank.args = {
+  instance: "Blank"
+};
 
 export const Dropdown = Template.bind({});
+Dropdown.args = {
+  instance: "Dropdown"
+};
 export const SearchBox = Template.bind({});
+SearchBox.args = {
+  instance: "SearchBox"
+};
 export const IconTextIcon = Template.bind({});
-
+IconTextIcon.args = {
+  instance: "IconTextIcon"
+};
