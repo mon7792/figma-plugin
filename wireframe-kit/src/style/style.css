@@ -1,3 +1,5 @@
+/* CSS FONT  */
+@import url('https://fonts.cdnfonts.com/css/poppins');
 /* 
 COLOR SHADES 
 */
@@ -85,15 +87,15 @@ IMAGE BOX
  */
 .image-box-tile {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  /* flex-direction: row;
+  justify-content: center; */
   align-items: center;
   padding: 0px;
   gap: 10px;
   width: 375px;
   height: 370px;
-  background: #00314D;
-  border: 2px solid #03A4FF;
+  background: #00314d;
+  border: 2px solid #03a4ff;
 }
 
 .image-box-icon {
@@ -104,22 +106,22 @@ IMAGE BOX
 /* 
 Shape
 */
-.shape-square{
+.shape-square {
   width: 100px;
   height: 100px;
   background: #044468;
-  border: 2px solid #03A4FF;
+  border: 2px solid #03a4ff;
 }
 
-.shape-circle{
+.shape-circle {
   width: 100px;
   height: 100px;
   border-radius: 50px;
   background: #044468;
-  border: 2px solid #03A4FF;
+  border: 2px solid #03a4ff;
 }
 
-.shape-triangle{
+.shape-triangle {
   width: 0;
   height: 0;
   position: relative;
@@ -128,7 +130,7 @@ Shape
   border-bottom: 100px solid #044468;
 }
 
-.shape-triangle:before{
+.shape-triangle:before {
   content: "";
   width: 0;
   height: 0;
@@ -149,7 +151,7 @@ Shape
   align-items: center;
 
   background: white;
-  border: 1px dashed #0093ED;
+  border: 1px dashed #0093ed;
   border-radius: 24px;
 }
 
@@ -160,13 +162,13 @@ Shape
 
 .logo-cont-title {
   padding-left: 20px;
-  color: #0093ED;
+  color: #0093ed;
   font-size: 130px;
 }
 /*
 INPUT 
  */
- .input{
+.input {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -174,18 +176,95 @@ INPUT
   gap: 10px;
   width: 327px;
   height: 64px;
-  background: #00314D;
-  border: 2px solid #03A4FF;
+  background: #00314d;
+  border: 2px solid #03a4ff;
   border-radius: 16px;
- }
+}
 
- .input-item{
+.input-item {
   display: flex;
   flex-direction: row;
   align-items: center;
   flex: auto;
- }
+}
 
- .input-pos{
+.input-pos {
   justify-content: space-between;
- }
+}
+
+/* 
+ STEPPER
+*/
+.stepper {
+  display: flex;
+}
+
+.stepper-item {
+  display: flex;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.stepper-item-outline {
+  border: 2px solid #03a4ff;
+}
+
+.stepper-item-number {
+  align-items: center;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 120%;
+  color: #03a4ff;
+}
+
+.stepper-item-circle {
+  border-radius: 20px;
+}
+
+.stepper-item-square {
+  border-radius: 14px;
+}
+
+.stepper-item-sign {
+  width: 24px;
+}
+
+.stepper-vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepper-item-horizontal-left {
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  border-right: 1px;
+  border-style: solid;
+  border-color: #03a4ff;
+}
+
+.stepper-item-horizontal-right {
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+  border-left: 1px;
+  border-style: solid;
+  border-color: #03a4ff;
+}
+
+.stepper-item-vertical-top {
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  border-bottom: 1px;
+  border-style: solid;
+  border-color: #03a4ff;
+}
+
+.stepper-item-vertical-bottom {
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  border-top: 1px;
+  border-style: solid;
+  border-color: #03a4ff;
+}
