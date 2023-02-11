@@ -1,0 +1,10 @@
+{
+  "name": "pix2figma",
+  "id": "1204914069183402724",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": [
+    "figma"
+  ],
+  "ui": "ui.html"
+}
