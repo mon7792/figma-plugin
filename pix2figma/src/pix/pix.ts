@@ -4,7 +4,12 @@ type pixFigmaNodeType =
   | "pix2fig-text"
   | "pix2fig-small-title";
 
-type pixFigmaDSLType = "pix2fig-header" | "pix2fig-row" | "pix2fig-single" | "pix2fig-double";
+type pixFigmaDSLType =
+  | "pix2fig-header"
+  | "pix2fig-row"
+  | "pix2fig-single"
+  | "pix2fig-double"
+  | "pix2fig-quadruple";
 
 // pixComponentPage returns the page containing pix figma component.
 const pixComponentPage = figma.root.findOne(
@@ -145,7 +150,7 @@ function pixSingle(instances: Array<InstanceNode>): FrameNode {
   return rowFrame;
 }
 
-// pixSingle creates a frame node with full width by adding instances vertically
+// pixDouble creates a frame node with half width by adding instances vertically
 function pixDouble(instances: Array<InstanceNode>): FrameNode {
   // create frame
   const rowFrame = figma.createFrame();
@@ -154,6 +159,31 @@ function pixDouble(instances: Array<InstanceNode>): FrameNode {
   // add the layout
   // resize to desktop width.
   rowFrame.resize(640, 100);
+
+  rowFrame.layoutPositioning = "AUTO";
+  rowFrame.layoutMode = "VERTICAL";
+
+  rowFrame.horizontalPadding = 10;
+  rowFrame.verticalPadding = 10;
+  rowFrame.itemSpacing = 10;
+
+  // fills 00314D
+  rowFrame.fills = [{ type: "SOLID", color: { r: 0, g: 0.14, b: 0.23 } }];
+
+  // children
+  instances.map((instance) => rowFrame.appendChild(instance));
+  return rowFrame;
+}
+
+// pixDouble creates a frame node with one forth width by adding instances vertically
+function pixQuadruple(instances: Array<InstanceNode>): FrameNode {
+  // create frame
+  const rowFrame = figma.createFrame();
+  rowFrame.name = "pix2fig-quadruple";
+
+  // add the layout
+  // resize to desktop width.
+  rowFrame.resize(320, 100);
 
   rowFrame.layoutPositioning = "AUTO";
   rowFrame.layoutMode = "VERTICAL";
@@ -185,13 +215,13 @@ export function readDSL(): SceneNode {
   let button = createButton(pixComponentPage);
   const single = pixSingle([title, text, button]);
   const row1 = pixRow([single]);
-  
+
   // 2nd row - 1 column
   title = createTitle(pixComponentPage);
   text = createText(pixComponentPage);
   button = createButton(pixComponentPage);
   const double1 = pixDouble([title, text, button]);
-  
+
   // 2nd row - 2 column
   title = createTitle(pixComponentPage);
   text = createText(pixComponentPage);
@@ -199,10 +229,37 @@ export function readDSL(): SceneNode {
   const double2 = pixDouble([title, text, button]);
   const row2 = pixRow([double1, double2]);
 
+  // 3nd row - 1 column
+  title = createTitle(pixComponentPage);
+  text = createText(pixComponentPage);
+  button = createButton(pixComponentPage);
+  const quad1 = pixQuadruple([title, text, button]);
+
+  // 3nd row - 1 column
+  title = createTitle(pixComponentPage);
+  text = createText(pixComponentPage);
+  button = createButton(pixComponentPage);
+  const quad2 = pixQuadruple([title, text, button]);
+
+  // 3nd row - 1 column
+  title = createTitle(pixComponentPage);
+  text = createText(pixComponentPage);
+  button = createButton(pixComponentPage);
+  const quad3 = pixQuadruple([title, text, button]);
+
+  // 3nd row - 1 column
+  title = createTitle(pixComponentPage);
+  text = createText(pixComponentPage);
+  button = createButton(pixComponentPage);
+  const quad4 = pixQuadruple([title, text, button]);
+
+  const row3 = pixRow([quad1, quad2, quad3, quad4]);
+
   // add child
   screen.appendChild(header);
   screen.appendChild(row1);
   screen.appendChild(row2);
+  screen.appendChild(row3);
 
   return screen;
 }
@@ -241,7 +298,6 @@ const screen = createScreen("pix2fig-screen", pixComponentPage);
 
   return screen;
 */
-
 
 /*
 PROGRAM TO PRINT:
