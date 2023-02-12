@@ -4,7 +4,7 @@ type pixFigmaNodeType =
   | "pix2fig-text"
   | "pix2fig-small-title";
 
-type pixFigmaDSLType = "pix2fig-header" | "pix2fig-row" | "pix2fig-single";
+type pixFigmaDSLType = "pix2fig-header" | "pix2fig-row" | "pix2fig-single" | "pix2fig-double";
 
 // pixComponentPage returns the page containing pix figma component.
 const pixComponentPage = figma.root.findOne(
@@ -145,31 +145,75 @@ function pixSingle(instances: Array<InstanceNode>): FrameNode {
   return rowFrame;
 }
 
+// pixSingle creates a frame node with full width by adding instances vertically
+function pixDouble(instances: Array<InstanceNode>): FrameNode {
+  // create frame
+  const rowFrame = figma.createFrame();
+  rowFrame.name = "pix2fig-double";
+
+  // add the layout
+  // resize to desktop width.
+  rowFrame.resize(640, 100);
+
+  rowFrame.layoutPositioning = "AUTO";
+  rowFrame.layoutMode = "VERTICAL";
+
+  rowFrame.horizontalPadding = 10;
+  rowFrame.verticalPadding = 10;
+  rowFrame.itemSpacing = 10;
+
+  // fills 00314D
+  rowFrame.fills = [{ type: "SOLID", color: { r: 0, g: 0.14, b: 0.23 } }];
+
+  // children
+  instances.map((instance) => rowFrame.appendChild(instance));
+  return rowFrame;
+}
+
 // readDSL read the DSL and create figma nodes
 export function readDSL(): SceneNode {
+  // screen
   const screen = createScreen("pix2fig-screen", pixComponentPage);
   const header = pixHeader([
     createButton(pixComponentPage),
     createButton(pixComponentPage),
   ]);
 
-  const title = createTitle(pixComponentPage);
-  const text = createText(pixComponentPage);
-  const button = createButton(pixComponentPage);
-
+  // 1st row
+  let title = createTitle(pixComponentPage);
+  let text = createText(pixComponentPage);
+  let button = createButton(pixComponentPage);
   const single = pixSingle([title, text, button]);
-  const row = pixRow([single]);
+  const row1 = pixRow([single]);
+  
+  // 2nd row - 1 column
+  title = createTitle(pixComponentPage);
+  text = createText(pixComponentPage);
+  button = createButton(pixComponentPage);
+  const double1 = pixDouble([title, text, button]);
+  
+  // 2nd row - 2 column
+  title = createTitle(pixComponentPage);
+  text = createText(pixComponentPage);
+  button = createButton(pixComponentPage);
+  const double2 = pixDouble([title, text, button]);
+  const row2 = pixRow([double1, double2]);
 
+  // add child
   screen.appendChild(header);
-  screen.appendChild(row);
+  screen.appendChild(row1);
+  screen.appendChild(row2);
 
   return screen;
 }
 
 /*
+PROGRAM TO PRINT:
+
+
 SAMPLE:
 header {
-btn-inactive, btn-inactive, btn-inactive, btn-active, btn-inactive
+btn-inactive, btn-inactive
 }
 row {
 single {
@@ -194,6 +238,67 @@ const screen = createScreen("pix2fig-screen", pixComponentPage);
   
   screen.appendChild(header);
   screen.appendChild(row);
+
+  return screen;
+*/
+
+
+/*
+PROGRAM TO PRINT:
+
+
+SAMPLE:
+header {
+btn-inactive, btn-inactive
+}
+row {
+single {
+small-title, text, btn-orange
+}
+}
+row {
+double {
+small-title, text, btn-green
+}
+double {
+small-title, text, btn-green
+}
+}
+}
+
+
+RESULT:
+// screen
+  const screen = createScreen("pix2fig-screen", pixComponentPage);
+  const header = pixHeader([
+    createButton(pixComponentPage),
+    createButton(pixComponentPage),
+  ]);
+
+  // 1st row
+  let title = createTitle(pixComponentPage);
+  let text = createText(pixComponentPage);
+  let button = createButton(pixComponentPage);
+  const single = pixSingle([title, text, button]);
+  const row1 = pixRow([single]);
+  
+  // 2nd row - 1 column
+  title = createTitle(pixComponentPage);
+  text = createText(pixComponentPage);
+  button = createButton(pixComponentPage);
+  const double1 = pixDouble([title, text, button]);
+  
+  // 2nd row - 2 column
+  title = createTitle(pixComponentPage);
+  text = createText(pixComponentPage);
+  button = createButton(pixComponentPage);
+  const double2 = pixDouble([title, text, button]);
+  const row2 = pixRow([double1, double2]);
+
+  // add child
+  screen.appendChild(header);
+  screen.appendChild(row1);
+  screen.appendChild(row2);
 
   return screen;
 */
