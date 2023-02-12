@@ -4,24 +4,23 @@
 {
   "opening-tag": "{",
   "closing-tag": "}",
-  "body": "screen-frame",
-  "header": "reactangle:row at the top",
-  "btn-active": " button-compnent",
-  "btn-inactive": "button-component",
-  "row": "empty plaholder",
-  "single": "empty plaholder-takes entire row",
-  "double": "empty plaholder-takes 1/2 row",
-  "quadruple": "empty plaholder-takes 1/3 row",
-  "btn-green": "button-component",
-  "btn-orange": "button-component",
-  "btn-red": "button-component",
-  "big-title": "text-component-big",
-  "small-title": "text-component-small",
-  "text": "text-component"
+  "body": "pix2fig-screen",
+  "header": "pix2fig-header",
+  "btn-active": "pix2fig-button",
+  "btn-inactive": "pix2fig-button",
+  "row": "pix2fig-row",
+  "single": "pix2fig-single",
+  "double": "pix2fig-double",
+  "quadruple": "pix2fig-quadruple",
+  "btn-green": "pix2fig-button",
+  "btn-orange": "pix2fig-button",
+  "btn-red": "pix2fig-button",
+  "big-title": "pix2fig-button",
+  "small-title": "pix2fig-small-title",
+  "text": "pix2fig-text"
 }
 
 ```
-
 
 sample
 ```
@@ -39,3 +38,13 @@ small-title, text, btn-red
 
 ## TAKE A LOOK AT FIGMA 
 FIGMA LOW CODE
+
+
+## HOW TO THINK ABOUT THE THIS PROBLEM
+
+1. loop through the text & store in the tree.
+2. translate
+3. create figma components
+
+
+<!-- text token -->
