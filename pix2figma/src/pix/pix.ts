@@ -2,7 +2,8 @@
 type pixFigmaNodeType =
   | "pix2fig-screen"
   | "pix2fig-text"
-  | "pix2fig-small-title";
+  | "pix2fig-small-title"
+  | "pix2fig-button";
 
 type pixFigmaDSLType =
   | "pix2fig-header"
@@ -17,41 +18,35 @@ const pixComponentPage = figma.root.findOne(
 ) as PageNode;
 
 // createButton return the instance of Button.
-function createButton(componentPage: PageNode): InstanceNode {
-  const starButton = componentPage.findOne(
+export function createButton(): InstanceNode {
+  const starButton = pixComponentPage.findOne(
     (node) => node.type === "INSTANCE" && node.name === "pix2fig-button"
   ) as InstanceNode;
-  console.log(starButton.type);
 
   return starButton.clone();
 }
 
 // createTitle return the instance of Title.
-function createTitle(componentPage: PageNode): InstanceNode {
-  const title = componentPage.findOne(
+export function createTitle(): InstanceNode {
+  const title = pixComponentPage.findOne(
     (node) => node.type === "INSTANCE" && node.name === "pix2fig-small-title"
   ) as InstanceNode;
-  console.log(title.type);
 
   return title.clone();
 }
 
 // createText return the instance of Text.
-function createText(componentPage: PageNode): InstanceNode {
-  const title = componentPage.findOne(
+export function createText(): InstanceNode {
+  const title = pixComponentPage.findOne(
     (node) => node.type === "INSTANCE" && node.name === "pix2fig-text"
   ) as InstanceNode;
-  console.log(title.type);
 
   return title.clone();
 }
 
 // createScreen returns the instance of blank desktop screen.
-function createScreen(
-  nodeType: pixFigmaNodeType,
-  componentPage: PageNode
-): FrameNode {
-  const blankScreenFrame = componentPage
+export function createScreen(): FrameNode {
+  const blankScreenFrame = pixComponentPage
     .findOne((node) => node.type === "FRAME" && node.name == "pix2fig-screen")
     ?.clone() as FrameNode;
 
@@ -72,7 +67,7 @@ function createScreen(
 }
 
 // pixHeader returns a frame node with full width by adding instances horizontally
-function pixHeader(instances: Array<InstanceNode>): FrameNode {
+export function pixHeader(): FrameNode {
   const rowFrame = figma.createFrame();
   rowFrame.name = "pix2fig-header";
 
@@ -94,12 +89,19 @@ function pixHeader(instances: Array<InstanceNode>): FrameNode {
   // 00314D
 
   // children
-  instances.map((instance) => rowFrame.appendChild(instance));
+  // instances.map((instance) => rowFrame.appendChild(instance));
   return rowFrame;
 }
 
+export function addChildren(
+  nd: FrameNode | InstanceNode,
+  instances: Array<InstanceNode | FrameNode>
+) {
+  instances.map((instance) => nd.appendChild(instance));
+}
+
 // pixRow creates a frame node with full width by adding instances horizontally
-function pixRow(instances: Array<FrameNode>): FrameNode {
+export function pixRow(): FrameNode {
   const rowFrame = figma.createFrame();
   rowFrame.name = "pix2fig-row";
 
@@ -121,12 +123,12 @@ function pixRow(instances: Array<FrameNode>): FrameNode {
   // 00314D
 
   // children
-  instances.map((instance) => rowFrame.appendChild(instance));
+  // instances.map((instance) => rowFrame.appendChild(instance));
   return rowFrame;
 }
 
 // pixSingle creates a frame node with full width by adding instances vertically
-function pixSingle(instances: Array<InstanceNode>): FrameNode {
+export function pixSingle(): FrameNode {
   // create frame
   const rowFrame = figma.createFrame();
   rowFrame.name = "pix2fig-single";
@@ -146,12 +148,12 @@ function pixSingle(instances: Array<InstanceNode>): FrameNode {
   rowFrame.fills = [{ type: "SOLID", color: { r: 0, g: 0.14, b: 0.23 } }];
 
   // children
-  instances.map((instance) => rowFrame.appendChild(instance));
+  // instances.map((instance) => rowFrame.appendChild(instance));
   return rowFrame;
 }
 
 // pixDouble creates a frame node with half width by adding instances vertically
-function pixDouble(instances: Array<InstanceNode>): FrameNode {
+export function pixDouble(): FrameNode {
   // create frame
   const rowFrame = figma.createFrame();
   rowFrame.name = "pix2fig-double";
@@ -171,12 +173,12 @@ function pixDouble(instances: Array<InstanceNode>): FrameNode {
   rowFrame.fills = [{ type: "SOLID", color: { r: 0, g: 0.14, b: 0.23 } }];
 
   // children
-  instances.map((instance) => rowFrame.appendChild(instance));
+  // instances.map((instance) => rowFrame.appendChild(instance));
   return rowFrame;
 }
 
 // pixDouble creates a frame node with one forth width by adding instances vertically
-function pixQuadruple(instances: Array<InstanceNode>): FrameNode {
+export function pixQuadruple(): FrameNode {
   // create frame
   const rowFrame = figma.createFrame();
   rowFrame.name = "pix2fig-quadruple";
@@ -196,64 +198,74 @@ function pixQuadruple(instances: Array<InstanceNode>): FrameNode {
   rowFrame.fills = [{ type: "SOLID", color: { r: 0, g: 0.14, b: 0.23 } }];
 
   // children
-  instances.map((instance) => rowFrame.appendChild(instance));
+  // instances.map((instance) => rowFrame.appendChild(instance));
   return rowFrame;
 }
 
 // readDSL read the DSL and create figma nodes
 export function readDSL(): SceneNode {
   // screen
-  const screen = createScreen("pix2fig-screen", pixComponentPage);
-  const header = pixHeader([
-    createButton(pixComponentPage),
-    createButton(pixComponentPage),
-  ]);
+  const screen = createScreen();
+  const header = pixHeader();
+  addChildren(header, [createButton(), createButton()]);
 
   // 1st row
-  let title = createTitle(pixComponentPage);
-  let text = createText(pixComponentPage);
-  let button = createButton(pixComponentPage);
-  const single = pixSingle([title, text, button]);
-  const row1 = pixRow([single]);
+  let title = createTitle();
+  let text = createText();
+  let button = createButton();
+  const single = pixSingle();
+  addChildren(single, [title, text, button]);
+
+  const row1 = pixRow();
+  addChildren(row1, [single]);
 
   // 2nd row - 1 column
-  title = createTitle(pixComponentPage);
-  text = createText(pixComponentPage);
-  button = createButton(pixComponentPage);
-  const double1 = pixDouble([title, text, button]);
+  title = createTitle();
+  text = createText();
+  button = createButton();
+  const double1 = pixDouble();
+  addChildren(double1, [title, text, button]);
 
   // 2nd row - 2 column
-  title = createTitle(pixComponentPage);
-  text = createText(pixComponentPage);
-  button = createButton(pixComponentPage);
-  const double2 = pixDouble([title, text, button]);
-  const row2 = pixRow([double1, double2]);
+  title = createTitle();
+  text = createText();
+  button = createButton();
+  const double2 = pixDouble();
+  addChildren(double2, [title, text, button]);
+
+  const row2 = pixRow();
+  addChildren(row2, [double1, double2]);
 
   // 3nd row - 1 column
-  title = createTitle(pixComponentPage);
-  text = createText(pixComponentPage);
-  button = createButton(pixComponentPage);
-  const quad1 = pixQuadruple([title, text, button]);
+  title = createTitle();
+  text = createText();
+  button = createButton();
+  const quad1 = pixQuadruple();
+  addChildren(quad1, [title, text, button]);
 
   // 3nd row - 1 column
-  title = createTitle(pixComponentPage);
-  text = createText(pixComponentPage);
-  button = createButton(pixComponentPage);
-  const quad2 = pixQuadruple([title, text, button]);
+  title = createTitle();
+  text = createText();
+  button = createButton();
+  const quad2 = pixQuadruple();
+  addChildren(quad2, [title, text, button]);
 
   // 3nd row - 1 column
-  title = createTitle(pixComponentPage);
-  text = createText(pixComponentPage);
-  button = createButton(pixComponentPage);
-  const quad3 = pixQuadruple([title, text, button]);
+  title = createTitle();
+  text = createText();
+  button = createButton();
+  const quad3 = pixQuadruple();
+  addChildren(quad3, [title, text, button]);
 
   // 3nd row - 1 column
-  title = createTitle(pixComponentPage);
-  text = createText(pixComponentPage);
-  button = createButton(pixComponentPage);
-  const quad4 = pixQuadruple([title, text, button]);
+  title = createTitle();
+  text = createText();
+  button = createButton();
+  const quad4 = pixQuadruple();
+  addChildren(quad4, [title, text, button]);
 
-  const row3 = pixRow([quad1, quad2, quad3, quad4]);
+  const row3 = pixRow();
+  addChildren(row3, [quad1, quad2, quad3, quad4]);
 
   // add child
   screen.appendChild(header);

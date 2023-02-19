@@ -1,3 +1,4 @@
+import { buildFigmaTree, readTESTDSL } from "./pix/dsl";
 import { readDSL } from "./pix/pix";
 
 
@@ -16,7 +17,7 @@ figma.ui.onmessage = msg => {
     const nodes: SceneNode[] = [];
 
     // ADD CODE HERE.
-    const screen = readDSL()
+    const screen = readTESTDSL()
     
     figma.currentPage.appendChild(screen);
     nodes.push(screen);

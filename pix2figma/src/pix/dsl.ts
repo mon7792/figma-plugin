@@ -1,3 +1,6 @@
+import { getPixFigmaNode } from "./mapping";
+import { addChildren } from "./pix";
+
 const pixNodeList = [
   "body",
   "header",
@@ -38,19 +41,20 @@ function getPixNodeType(nd: string): pixNodeType | undefined {
 // pixNode represent the
 export type pixNode = {
   name: pixNodeType;
+  figNode: FrameNode | InstanceNode;
   children: Array<pixNode>;
 };
 
 const dslInput = `
-header {
-    btn-inactive, btn-inactive, btn-inactive, btn-active, btn-inactive
-    }
-    row {
-    single {
-    small-title, text, btn-red
-    }
-    }
-`;
+  header {
+      btn-inactive, btn-inactive, btn-inactive, btn-active, btn-inactive
+      }
+      row {
+      single {
+        small-title, text, btn-red
+      }
+      }
+  `;
 
 // getPixNode return the pixNodeTree from input.
 function getPixNode(input: string): pixNode {
@@ -61,7 +65,11 @@ function getPixNode(input: string): pixNode {
   // token store pixNodeType
   let token = "";
   // pxNode store entire node tree
-  let pxNode: pixNode = { name: "body", children: [] };
+  let pxNode: pixNode = {
+    name: "body",
+    figNode: getPixFigmaNode("body"),
+    children: [],
+  };
   // pixTokenStack
   let pixTokenStack: Array<pixNode> = [];
   pixTokenStack.push(pxNode);
@@ -78,7 +86,11 @@ function getPixNode(input: string): pixNode {
         continue;
       }
       // create a new new node
-      let pixToken: pixNode = { name: pTkn, children: [] };
+      let pixToken: pixNode = {
+        name: pTkn,
+        figNode: getPixFigmaNode(pTkn),
+        children: [],
+      };
 
       if (pixTokenStack.length === 0) {
         pixTokenStack.push(pixToken);
@@ -105,7 +117,11 @@ function getPixNode(input: string): pixNode {
         continue;
       }
       // create a new new node
-      let pixToken: pixNode = { name: pTkn, children: [] };
+      let pixToken: pixNode = {
+        name: pTkn,
+        figNode: getPixFigmaNode(pTkn),
+        children: [],
+      };
 
       // push the token in the current element stack
       pixTokenStack[pixTokenStack.length - 1].children.push(pixToken);
@@ -126,7 +142,11 @@ function getPixNode(input: string): pixNode {
         continue;
       }
       // create a new new node
-      let pixToken: pixNode = { name: pTkn, children: [] };
+      let pixToken: pixNode = {
+        name: pTkn,
+        figNode: getPixFigmaNode(pTkn),
+        children: [],
+      };
 
       // add the element to children
       pixTokenStack[pixTokenStack.length - 1].children.push(pixToken);
@@ -143,20 +163,54 @@ function getPixNode(input: string): pixNode {
   return pxNode;
 }
 
-export function readDSL() {
+export function readTESTDSL() : FrameNode | InstanceNode{
   console.log("reading DSL");
   let nd = getPixNode(dslInput);
-  console.log();
-  displayPixNode(nd);
+  // displayPixNode(nd);
+  // console.log();
+  return buildFigmaTree(nd)
+  
 }
 
 function displayPixNode(pxNode: pixNode) {
   if (pxNode === undefined) {
     return;
   }
-  console.log(pxNode.name);
+  console.log(pxNode.figNode.name);
 
   for (let i = 0; i < pxNode.children.length; i++) {
     displayPixNode(pxNode.children[i]);
   }
+}
+
+export function buildFigmaTree(pxNode: pixNode): FrameNode | InstanceNode{
+  // pixTokenStack
+  let pixNodeQueue: Array<pixNode> = [];
+
+  pixNodeQueue.push(pxNode);
+
+  while (pixNodeQueue.length !== 0) {
+    let nd = pixNodeQueue.shift();
+    if (nd === undefined) {
+      continue;
+    }
+    if (nd.children.length === 0) {
+      continue;
+    }
+    if (nd.figNode === undefined) {
+      continue;
+    }
+
+
+    nd.children.map((n) => {
+      if (nd !== undefined) {
+        // add the children to figma code.
+        addChildren(nd.figNode, [n.figNode]);
+        // push to que
+        pixNodeQueue.push(n);
+      }
+    });
+  }
+
+  return pxNode.figNode
 }
