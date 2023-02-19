@@ -134,6 +134,11 @@ function getPixNode(input: string): pixNode {
     // } element
     if (input[i] === "}") {
       token = token.trim();
+      if (token === "") {
+        //  pop it to top of stack
+        pixTokenStack.pop();
+        continue;
+      }
       // TODO: check if the node is valid
       // get node type from token
       let pTkn = getPixNodeType(token);
@@ -163,13 +168,12 @@ function getPixNode(input: string): pixNode {
   return pxNode;
 }
 
-export function readTESTDSL() : FrameNode | InstanceNode{
+export function readTESTDSL(input: string): FrameNode | InstanceNode {
   console.log("reading DSL");
-  let nd = getPixNode(dslInput);
+  let nd = getPixNode(input);
   // displayPixNode(nd);
   // console.log();
-  return buildFigmaTree(nd)
-  
+  return buildFigmaTree(nd);
 }
 
 function displayPixNode(pxNode: pixNode) {
@@ -183,7 +187,7 @@ function displayPixNode(pxNode: pixNode) {
   }
 }
 
-export function buildFigmaTree(pxNode: pixNode): FrameNode | InstanceNode{
+export function buildFigmaTree(pxNode: pixNode): FrameNode | InstanceNode {
   // pixTokenStack
   let pixNodeQueue: Array<pixNode> = [];
 
@@ -201,7 +205,6 @@ export function buildFigmaTree(pxNode: pixNode): FrameNode | InstanceNode{
       continue;
     }
 
-
     nd.children.map((n) => {
       if (nd !== undefined) {
         // add the children to figma code.
@@ -212,5 +215,5 @@ export function buildFigmaTree(pxNode: pixNode): FrameNode | InstanceNode{
     });
   }
 
-  return pxNode.figNode
+  return pxNode.figNode;
 }

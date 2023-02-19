@@ -43,13 +43,23 @@ export type pixNode = {
 
 const dslInput = `
 header {
-    btn-inactive, btn-inactive, btn-inactive, btn-active, btn-inactive
-    }
-    row {
-    single {
-    small-title, text, btn-red
-    }
-    }
+  btn-inactive, btn-inactive
+}
+
+row {
+  single {
+      small-title, text, btn-orange
+  }
+}
+
+row {
+  double {
+      small-title, text, btn-green
+  }
+  double {
+      small-title, text, btn-green
+  }
+}
 `;
 
 // getPixNode return the pixNodeTree from input.
@@ -118,6 +128,11 @@ function getPixNode(input: string): pixNode {
     // } element
     if (input[i] === "}") {
       token = token.trim();
+      if (token === "") {
+        //  pop it to top of stack
+        pixTokenStack.pop();
+        continue;
+      }
       // TODO: check if the node is valid
       // get node type from token
       let pTkn = getPixNodeType(token);
@@ -146,8 +161,9 @@ function getPixNode(input: string): pixNode {
 export function readDSL() {
   console.log("reading DSL");
   let nd = getPixNode(dslInput);
-  console.log();
-  displayPixNode(nd);
+
+  console.log(nd);
+  // displayPixNode(nd);
 }
 
 function displayPixNode(pxNode: pixNode) {

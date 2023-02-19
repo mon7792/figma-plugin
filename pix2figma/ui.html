@@ -1,14 +1,43 @@
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/figma-plugin-ds@1.0.1/dist/figma-plugin-ds.css"
+/>
+<style>
+  input {
+    display: block;
+  }
+
+  body {
+    padding: 2em;
+  }
+
+  div {
+    margin: 1em;
+  }
+</style>
 <h2>Pix 2 Figma</h2>
-<button id="export">Export</button>
-<button id="cancel">Cancel</button>
+<div>
+  <label for="pixDSL">DSL</label>
+  <input
+    class="textarea"
+    type="textarea"
+    rows="3"
+    placeholder="auto ml desc"
+    id="pixDSL"
+  />
+</div>
+
+<div>
+  <button class="button button--primary" id="export">Export</button>
+  <button class="button button--primary" id="cancel">Cancel</button>
+</div>
 <script>
+  document.getElementById("export").onclick = () => {
+    const pixDSL = document.getElementById("pixDSL").value || "";
+    parent.postMessage({ pluginMessage: { type: "export", pixDSL: pixDSL } }, "*");
+  }
 
-document.getElementById('export').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'export' } }, '*')
-}
-
-document.getElementById('cancel').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-}
-
+  document.getElementById("cancel").onclick = () => {
+    parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
+  };
 </script>
