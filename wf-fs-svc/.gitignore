@@ -1,0 +1,7 @@
+node_modules
+dist
+
+resources/db/mnt
+uploads/*
+
+.DS_Store
