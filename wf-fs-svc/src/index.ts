@@ -5,6 +5,8 @@ import path from "path";
 import pkg from "pg";
 const { Client } = pkg;
 
+import cors from "cors";
+
 import { Files } from "./db/files";
 import { receive } from "./queue/rec";
 import { send } from "./queue/send";
@@ -39,6 +41,8 @@ async function main() {
   // File class to handle database operations
   const files = new Files(clt);
 
+
+  app.use(cors())
   app.get("/", async (req, res) => {
     
     await send(req.query.name as string || "World");
@@ -50,11 +54,11 @@ async function main() {
   });
 
   app.get("/status", async (req, res) => {
-    const fsName: string = req.headers["x-file-name"] as string;
-    if (req.headers["x-file-name"] === undefined) {
-        res.status(400).send("x-file-name header is not set");
-        return;
-    }
+    const fsName: string = req.headers["x-file-name"] as string || "uploads/az.png";
+    // if (req.headers["x-file-name"] === undefined) {
+    //     res.status(400).send("x-file-name header is not set");
+    //     return;
+    // }
     const result = await files.getFileStatus(fsName);
     res.setHeader("Content-Type", "application/json");
     res.send(result);

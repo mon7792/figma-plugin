@@ -13,15 +13,19 @@ figma.ui.resize(500, 500);
 // posted message.
 
 
-figma.ui.onmessage = msg => {
+figma.ui.onmessage = async (msg) => {
   // One way of distinguishing between different types of messages sent from
   // your HTML page is to use an object with a "type" property like this.
   if (msg.type === 'export') {
     const nodes: SceneNode[] = [];
 
     console.log(msg.pixDSL)
+    const resp = await fetch("http://127.0.0.1:8080/status");
+    const data = await resp.json();
+    console.log(data)
+    const input = data.predicted || msg.pixDSL
     // ADD CODE HERE.
-    const screen = readTESTDSL(msg.pixDSL)
+    const screen = readTESTDSL(input)
     
     figma.currentPage.appendChild(screen);
     nodes.push(screen);
