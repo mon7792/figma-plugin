@@ -11,3 +11,7 @@ WireFrame FileSystem Service is responsible for
 difference between es6 and higher es
 what should be used?
 <!--  -->
+
+
+S1 :> upload the image and publish the message. 
+   :> read the message and add the data into entry.
