@@ -9,7 +9,7 @@ import cors from "cors";
 
 import { Files } from "./db/files";
 import { receive } from "./queue/rec";
-import { send } from "./queue/send";
+// import { send } from "./queue/send";
 
 async function main() {
   const PORT: number = parseInt(process.env.PORT || "3000") || 3000;
@@ -43,10 +43,13 @@ async function main() {
 
 
   app.use(cors())
+  // const __dirname = path.resolve();
+  // const filePath = path
+  // serve html file
+  app.use(express.static("public"));
   app.get("/", async (req, res) => {
-    
-    await send(req.query.name as string || "World");
-    res.send("Hello World");
+    // TODO: absolute path is not working
+    res.sendFile(path.join("/Volumes/hack/Projects/figma-plugin/wf-fs-svc/src/public", "index.html"));
   });
   app.get("/rec", async (_, res) => {
     await receive()
@@ -63,6 +66,15 @@ async function main() {
     res.setHeader("Content-Type", "application/json");
     res.send(result);
   });
+
+  // get images
+  app.get("/images", async (req, res) => {
+    const result = await files.getFiles();
+    res.setHeader("Content-Type", "application/json");
+    res.send(result);
+  });
+
+
 
   app.post("/upload", async (req, res) => {
     // check if x-file-name header is set
@@ -92,8 +104,7 @@ async function main() {
       console.log("stream closed 100%");
       // 1. upload the file to file storage
       // 2. add file to database
-      // 3. send the message to the queue  
-
+      // 3. send the message to the queue
 
       await files.addFile(filePath);
       res.send("done");

@@ -1,4 +1,5 @@
 import { Client } from "pg";
+import { FileResp } from "src/types";
 
 export class Files {
   private client: Client;
@@ -44,6 +45,24 @@ export class Files {
     try {
       const res = await this.client.query(text, values);
       return res.rows[0].status;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // getFiles 
+  async getFiles(): Promise<Array<FileResp>> {
+    let fsRespList: Array<FileResp> = [];
+    const text = "select name, processed from files";
+    try {
+      const res = await this.client.query(text);
+      return res.rows.map((row, i) => {
+        return {
+          id: i,
+          name: row.name,
+          processed: row.processed,
+        };
+      });
     } catch (error) {
       console.log(error);
     }
