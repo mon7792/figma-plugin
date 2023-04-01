@@ -15,3 +15,17 @@ what should be used?
 
 S1 :> upload the image and publish the message. 
    :> read the message and add the data into entry.
+
+
+
+
+## API DESIGN
+1. /upload 
+GET x-file-name: ""
+
+
+RESP:
+{
+   name: "",
+   status: "IMG_UPLOADED"
+}

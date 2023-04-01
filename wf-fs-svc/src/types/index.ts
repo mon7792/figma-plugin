@@ -4,3 +4,8 @@ export type FileResp = {
     name: string;
     processed: boolean;
 }
+
+
+export type FileMsg = {
+    path: string;
+}
