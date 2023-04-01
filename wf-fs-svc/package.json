@@ -4,7 +4,7 @@
   "description": "WireFrame FileSystem Service is responsible for 1. accpeting files. 2. validating files. 3. store the file entry in the database. 4. providing the file processing status.",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node --experimental-modules --es-module-specifier-resolution=node dist/index.js",
+    "start": "tsc && node --experimental-modules --es-module-specifier-resolution=node dist/svc/wffsapi/index.js",
     "svc:jobs": "tsc && node --experimental-modules --es-module-specifier-resolution=node dist/svc/wffsjobs/index.js",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
