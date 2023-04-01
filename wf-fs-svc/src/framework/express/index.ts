@@ -18,7 +18,7 @@ export class ExpressApp{
     public register(){
         this.app.use(express.json());
         console.log(this.controller.uploadFileHandler);
-        this.app.get('/uploads', this.controller.uploadFileHandler)
+        this.app.get('/status/{id}', this.controller.uploadFileHandler)
 
         this.app.post('/upload', this.controller.uploadFileHandler)
     }

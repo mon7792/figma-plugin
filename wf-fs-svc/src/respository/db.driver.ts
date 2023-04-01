@@ -1,7 +1,7 @@
 import { FileResp } from "../types";
 
 export interface DBStoreRepository {
-  addFile(name: string): Promise<void>;
+  addFile(fid: string, name: string, filePath: string): Promise<void>;
   updateProcessedFile(
     name: string,
     processed: boolean,

@@ -18,6 +18,18 @@ export class UploadFile {
     this.fs = fs;
   }
 
+  //  create a function to generate a random string
+  private createRandomString(length: number): string {
+    let result = "";
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
   public validate(name: string): boolean {
     return this.fs.validateFileName(name);
   }
@@ -27,7 +39,7 @@ export class UploadFile {
     const filePath = await this.fs.saveFileStream(name, req);
 
     // add the file to the database
-    await this.db.addFile(filePath);
+    await this.db.addFile(this.createRandomString(8),name,filePath);
 
     // create the message to send to the queue
     await this.queue.send("upload", filePath);

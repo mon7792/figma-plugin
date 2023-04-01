@@ -11,9 +11,9 @@ export class DBStore implements DBStoreRepository {
   }
 
   // addFile to database
-  async addFile(name: string): Promise<void> {
-    const text = "insert into files (name) values ($1)";
-    const values = [name];
+  async addFile(fid: string, name: string, filePath: string): Promise<void> {
+    const text = "insert into files (fid, name, file_path) values ($1)";
+    const values = [fid, name, filePath];
 
     console.log("Adding file to database", name);
 

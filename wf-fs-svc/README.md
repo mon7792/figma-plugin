@@ -26,6 +26,14 @@ GET x-file-name: ""
 
 RESP:
 {
-   name: "",
+   id: "image-tracking-id"
+   name: "display-image-name",
    status: "IMG_UPLOADED"
+}
+
+2. /status/image-id
+{
+   id: "id"
+   status: "IMG_PROCESSING"
+   predicted: {}
 }
