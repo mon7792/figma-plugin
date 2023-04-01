@@ -18,11 +18,11 @@ export class FileStore implements FsStoreRepository {
     const ext = fsList[fsList.length - 1].toLowerCase();
     // get random filename.
     const filename = this.createRandomString(10);
-    return path.join(dir, `${filename}.${ext}`);;
+    return path.join(dir, `${filename}.${ext}`);
   }
 
-  // validateFileName is a method that validates the file name   
-  public validateFileName(name: string): boolean{
+  // validateFileName is a method that validates the file name
+  public validateFileName(name: string): boolean {
     // process file extension.
     const fsList = name.split(".");
     if (fsList.length == 2) {
@@ -32,10 +32,10 @@ export class FileStore implements FsStoreRepository {
     // get the file extension
     const ext = fsList[fsList.length - 1].toLowerCase();
     if (!extensionList.includes(ext)) {
-        return false;
+      return false;
     }
 
-    return true
+    return true;
   }
 
   //  create a function to generate a random string
@@ -79,5 +79,10 @@ export class FileStore implements FsStoreRepository {
     });
 
     return filePath;
+  }
+
+  // getFileContent to get filecontent from file system
+  public getFileContent(filePath: string): Blob {
+    return new Blob([fs.readFileSync(filePath)]);
   }
 }

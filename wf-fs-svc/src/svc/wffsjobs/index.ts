@@ -1,90 +1,41 @@
-import axios from "axios";
-import FormData from "form-data";
-import fs from "fs";
-
-import pkg from "pg";
-import { exit } from "process";
-import { json } from "stream/consumers";
-const { Client } = pkg;
-
-import { Files } from "./../../db/files";
+import { DBClient } from "../../dependency/db";
+import { QueClient } from "../../dependency/queue";
+import { ProcessFile } from "../../usecase/processfile.usecase";
+import { DBStore } from "../../driver/db";
+import { FileStore } from "../../driver/files";
+import { QueueStore } from "../../driver/queue";
 
 console.log("Hello World... starting jobs");
 
-type resp = {
-  predicted: string;
-};
-
 async function main() {
-  try {
-    // connect to database
-    const DB_HOST: string = process.env.DB_HOST || "127.0.0.1";
-    const DB_NAME: string = process.env.DB_NAME || "wffs";
-    const DB_PORT: number = parseInt(process.env.DB_PORT || "5432") || 5432;
-    const DB_USER: string = process.env.DB_USER || "postgres";
-    const DB_PASSWORD: string = process.env.DB_PASSWORD || "";
+  // get the DB
+  const dbClient = new DBClient(
+    "127.0.0.1",
+    5432,
+    "postgres",
+    "wffssvc123",
+    "wffs"
+  );
+  const dbClt = await dbClient.ping();
 
-    if (DB_PASSWORD === "") {
-      throw new Error("DB_PASSWORD is not set");
-    }
+  // get the queue
+  const queClt = new QueClient("amqp://localhost");
+  const queConn = await queClt.connect();
 
-    const clt = new Client({
-      host: DB_HOST,
-      port: DB_PORT,
-      user: DB_USER,
-      password: DB_PASSWORD,
-      database: DB_NAME,
-    });
+  const prcFs = new ProcessFile(
+    new DBStore(dbClt),
+    new QueueStore(queConn),
+    new FileStore(),
+    "http://localhost:5000/"
+  );
+  await prcFs.exec("upload");
 
-    await clt.connect();
-    console.log("Connected to database");
-    await new Promise(r => setTimeout(r, 2000));
-    console.log("waiting for 2 seconds");
-
-    // File class to handle database operations
-    const fst = new Files(clt);
-
-
-    // TODO: the location of the files will come from message queue.
-    const filePath =
-      "/Volumes/hack/Projects/figma-plugin/wf-fs-svc/uploads/az.png";
-
-
-    //  read file as stream
-    const fA = fs.createReadStream(filePath);
-
-    // create form data
-    const data = new FormData();
-    data.append("file", fA, "fA.png");
-
-    let result: resp = { predicted: "" };
-    //  axios request to post multipart file to upload api.
-    const response = await axios.post("http://localhost:5000/", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    result.predicted = response.data
-      .replaceAll("<START>", "")
-      .replaceAll("<END>", "");
-
-    let status: string = JSON.stringify(result);
-    console.log(status);
-    //  update database with file name and status
-    await fst.updateProcessedFile(
-      "uploads/az.png",
-      true,
-      status
-    );
-  } catch (error) {
-    console.log(error);
-  }
-
-  exit(0);
+  await dbClt.end();
+  await queConn.close();
 }
 
-async function rt(){
-    await main();
+async function rt() {
+  await main();
 }
 
 rt();
