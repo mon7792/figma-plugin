@@ -2,6 +2,7 @@ import { Request } from "express";
 import { DBStoreRepository } from "src/respository/db.driver";
 import { FsStoreRepository } from "src/respository/fs.driver";
 import { QueueStoreRepository } from "src/respository/queue.driver";
+import { FileResp } from "src/types";
 
 export class UploadFile {
   private db: DBStoreRepository;
@@ -34,14 +35,20 @@ export class UploadFile {
     return this.fs.validateFileName(name);
   }
 
-  public async exec(name: string, req: Request): Promise<void> {
+  public async exec(name: string, req: Request): Promise<FileResp> {
     // save the file to the file system
     const filePath = await this.fs.saveFileStream(name, req);
 
     // add the file to the database
-    await this.db.addFile(this.createRandomString(8),name,filePath);
+    const resp = await this.db.addFile(
+      this.createRandomString(8),
+      name,
+      filePath
+    );
 
     // create the message to send to the queue
     await this.queue.send("upload", filePath);
+
+    return resp;
   }
 }

@@ -1,6 +1,6 @@
 import { Client } from 'pg';
 
-import { FileResp } from "src/types";
+import { FileResp, DbFileStatus } from "src/types";
 import { DBStoreRepository } from "../../respository/db.driver";
 
 // DBStore class to handle database operations
@@ -11,14 +11,23 @@ export class DBStore implements DBStoreRepository {
   }
 
   // addFile to database
-  async addFile(fid: string, name: string, filePath: string): Promise<void> {
-    const text = "insert into files (fid, name, file_path) values ($1)";
+  async addFile(fid: string, name: string, filePath: string): Promise<FileResp> {
+    const fsRsp : FileResp = {
+      id: 0,
+      name: name,
+      processed: false,
+    }
+    const text = "insert into files (fid, name, file_path) values ($1, $2, $3) returning fid, name";
     const values = [fid, name, filePath];
 
     console.log("Adding file to database", name);
 
     try {
-      await this.client.query(text, values);
+      const res = await this.client.query(text, values);
+      fsRsp.id = res.rows[0].fid;
+      fsRsp.name = res.rows[0].name;
+
+      return fsRsp;
     } catch (error) {
       console.error(`unable to add the new file in the DB ${error}`);
       throw error;
@@ -53,6 +62,30 @@ export class DBStore implements DBStoreRepository {
       return res.rows[0].status;
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async getFsStatus(id: string): Promise<DbFileStatus> {
+    let fsStatus: DbFileStatus = {
+      fid: "",
+      name: "",
+      processed: false,
+      predicted: "",
+    };
+    const text = "select name, processed, predicted from files where fid = $1";
+    const values = [id];
+
+    console.log("Getting file status from database", id);
+    try {
+      const res = await this.client.query(text, values);
+      fsStatus.fid = id;
+      fsStatus.name = res.rows[0].name;
+      fsStatus.processed = res.rows[0].processed;
+      fsStatus.predicted = res.rows[0].predicted || "";
+      return fsStatus;
+    } catch (error) {
+      console.error(`unable to get file status for ${id}`);
+      throw error;
     }
   }
 

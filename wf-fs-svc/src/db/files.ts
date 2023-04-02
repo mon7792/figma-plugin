@@ -1,5 +1,5 @@
 import { Client } from "pg";
-import { FileResp } from "src/types";
+import { FileResp, DbFileStatus } from "src/types";
 
 export class Files {
   private client: Client;
@@ -50,7 +50,7 @@ export class Files {
     }
   }
 
-  // getFiles 
+  // getFiles
   async getFiles(): Promise<Array<FileResp>> {
     let fsRespList: Array<FileResp> = [];
     const text = "select name, processed from files";
