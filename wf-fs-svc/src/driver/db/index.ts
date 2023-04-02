@@ -28,17 +28,18 @@ export class DBStore implements DBStoreRepository {
   async updateProcessedFile(
     name: string,
     processed: boolean,
-    status: string
+    predicted: string
   ): Promise<void> {
-    const text = "update files set processed = $1, status = $2 where name = $3";
-    const values = [processed, status, name];
+    const text = "update files set processed = $1, predicted = $2 where name = $3";
+    const values = [processed, predicted, name];
 
     console.log("Updating file in database", name);
 
     try {
       await this.client.query(text, values);
     } catch (error) {
-      console.log(error);
+      console.log("unable to update the file in the DB", error);
+      throw error;
     }
   }
 

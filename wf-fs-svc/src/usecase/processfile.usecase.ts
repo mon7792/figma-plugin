@@ -64,9 +64,9 @@ export class ProcessFile {
     const readStream = await this.fs.getFileContent(filePath);
 
     // send the request to the ai server
-    const status = await this.sendRequestToAiServer(filePath, readStream);
+    const predicted = await this.sendRequestToAiServer(filePath, readStream);
 
-    // add the status to the database
-    await this.db.updateProcessedFile(filePath, true, status);
+    // add the predicted to the database
+    await this.db.updateProcessedFile(filePath, true, predicted);
   }
 }
