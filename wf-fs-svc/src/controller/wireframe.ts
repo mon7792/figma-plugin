@@ -26,6 +26,7 @@ export class WireFrameController {
     res: Response,
     next: NextFunction
   ) => {
+    console.log("statusFileHandler");
     const id: string = req.params.id || "";
     if (id.length === 0) {
       res.status(400).send("id does not exist");
