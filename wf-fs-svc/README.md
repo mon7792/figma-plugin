@@ -37,3 +37,7 @@ RESP:
    status: "IMG_PROCESSING"
    predicted: {}
 }
+
+
+# TODO
+1. read one message at a time.
