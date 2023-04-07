@@ -20,12 +20,14 @@ figma.ui.onmessage = async (msg) => {
     const nodes: SceneNode[] = [];
 
     console.log(msg.pixDSL)
-    const resp = await fetch("http://127.0.0.1:8080/status");
+    const resp = await fetch("http://127.0.0.1:8080/status/dSdm75pu");
     const data = await resp.json();
     console.log(data)
     const input = data.predicted || msg.pixDSL
+    const ip = JSON.parse(input).predicted
+    console.log(JSON.stringify(ip))
     // ADD CODE HERE.
-    const screen = readTESTDSL(input)
+    const screen = readTESTDSL(JSON.stringify(ip));
     
     figma.currentPage.appendChild(screen);
     nodes.push(screen);

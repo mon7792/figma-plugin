@@ -1,5 +1,6 @@
 
 import express, {Express} from 'express';
+import cors from "cors";
 import { WireFrameController } from '../../controller/wireframe';
 
 // ExpressApp class register the rotues and start the server.
@@ -17,6 +18,7 @@ export class ExpressApp{
     // register routes & middleware
     public register(){
         this.app.use(express.json());
+        this.app.use(cors());
         console.log(this.controller.uploadFileHandler);
         this.app.get('/status/:id', this.controller.statusFileHandler)
 

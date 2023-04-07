@@ -70,6 +70,10 @@ function getPixNode(input: string): pixNode {
     figNode: getPixFigmaNode("body"),
     children: [],
   };
+
+  
+  input = input.replace('"', '');
+  console.log("input", input);
   // pixTokenStack
   let pixTokenStack: Array<pixNode> = [];
   pixTokenStack.push(pxNode);
@@ -171,7 +175,7 @@ function getPixNode(input: string): pixNode {
 export function readTESTDSL(input: string): FrameNode | InstanceNode {
   console.log("reading DSL");
   let nd = getPixNode(input);
-  // displayPixNode(nd);
+  displayPixNode(nd);
   // console.log();
   return buildFigmaTree(nd);
 }
