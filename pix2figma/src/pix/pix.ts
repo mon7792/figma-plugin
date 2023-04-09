@@ -44,12 +44,8 @@ export function createTitle(): InstanceNode {
 // https://www.figma.com/file/NiCAOsQKb7nfkIiH7JOaIn/Bloo-Lo-Fi-Wireframe-Kit-(Community)?node-id=1335-14672&t=w1lV5qc5uiGq3Qul-4
 // createText return the instance of Text.
 export function createText(): InstanceNode {
-  // const title = pixComponentPage.findOne(
-  //   (node) => node.type === "INSTANCE" && node.name === "pix2fig-text"
-  // ) as InstanceNode;
-
   const title = pixComponentPage.findOne(
-    (node) => node.type === "INSTANCE" && node.name === "https://www.figma.com/file/NiCAOsQKb7nfkIiH7JOaIn/Bloo-Lo-Fi-Wireframe-Kit-(Community)?node-id=1335-14672&t=w1lV5qc5uiGq3Qul-4"
+    (node) => node.type === "INSTANCE" && node.name === "pix2fig-text"
   ) as InstanceNode;
 
   console.log(title);
