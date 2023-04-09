@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "tsc && node --experimental-modules --es-module-specifier-resolution=node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,5 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "figma-js": "^1.16.0"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.58.0",
+    "ts-loader": "^9.4.2",
+    "typescript": "^4.9.5"
   }
 }
