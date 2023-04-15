@@ -16,6 +16,14 @@ figma.ui.resize(500, 500);
 figma.ui.onmessage = async (msg) => {
   // One way of distinguishing between different types of messages sent from
   // your HTML page is to use an object with a "type" property like this.
+  if (msg.type === 'load') {
+    console.log("dfafdasdfasdfasfd")
+   await loadImageInUI()
+
+   return
+  }
+
+
   if (msg.type === 'export') {
     const nodes: SceneNode[] = [];
 
@@ -41,3 +49,33 @@ figma.ui.onmessage = async (msg) => {
   // keep running, which shows the cancel button at the bottom of the screen.
   figma.closePlugin();
 };
+
+
+async function loadImageInUI(): Promise<void>{
+  // extract image hash from selected node
+    const selectedNodes = figma.currentPage.selection[0] as RectangleNode; 
+    const imgNode = selectedNodes.fills as ImagePaint[];
+    const hash = imgNode[0].imageHash
+
+    if (hash === null) {
+      // todo: show error message
+      return
+    }
+
+    // get bytes from image hash
+    const img = await figma.getImageByHash(hash)
+    if (img === null) {
+      // todo: show error message
+      return
+    }
+
+    const imgBytes = await img.getBytesAsync()
+
+    // set the src url for img tag with id "pix-img"
+    figma.ui.postMessage({ type: 'load', data: imgBytes })
+}
+
+// load img from UnitArray8 into img tag html
+function loadImg(imgData: Uint8Array): string {
+  return URL.createObjectURL(new Blob([imgData]));
+}

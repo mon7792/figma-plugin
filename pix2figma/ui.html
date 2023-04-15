@@ -18,6 +18,7 @@
 <h2>Pix 2 Figma</h2>
 <div>
   <label for="pixDSL">DSL</label>
+  <canvas id="pix-canvas" />
   <input
     class="textarea"
     type="textarea"
@@ -28,16 +29,59 @@
 </div>
 
 <div>
+  <button class="button button--primary" id="load">Load</button>
   <button class="button button--primary" id="export">Export</button>
   <button class="button button--primary" id="cancel">Cancel</button>
 </div>
 <script>
+  document.getElementById("load").onclick = () => {
+    parent.postMessage({ pluginMessage: { type: "load" } }, "*");
+  };
   document.getElementById("export").onclick = () => {
     const pixDSL = document.getElementById("pixDSL").value || "";
-    parent.postMessage({ pluginMessage: { type: "export", pixDSL: pixDSL } }, "*");
-  }
+    parent.postMessage(
+      { pluginMessage: { type: "export", pixDSL: pixDSL } },
+      "*"
+    );
+  };
 
   document.getElementById("cancel").onclick = () => {
     parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
   };
+</script>
+<script>
+  // Create an event handler to receive messages from the main
+  // thread.
+  window.onmessage = async (event) => {
+    
+    // Just get the bytes directly from the pluginMessage since
+    // that's the only type of message we'll receive in this
+    // plugin. In more complex plugins, you'll want to check the
+    // type of the message.
+    const { type, data } = event.data.pluginMessage;
+
+    console.log("event", data);
+    const canvas = document.getElementById("pix-canvas");
+    const ctx = canvas.getContext("2d");
+
+    const imageData = await decode(canvas, ctx, data);
+  };
+
+  // Decoding an image can be done by sticking it in an HTML
+  // canvas, as we can read individual pixels off the canvas.
+  async function decode(canvas, ctx, bytes) {
+    console.log("decode--->>>", "DECODE");
+    const url = URL.createObjectURL(new Blob([bytes]));
+    const image = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject();
+      img.src = url;
+    });
+    canvas.width = image.width;
+    canvas.height = image.height;
+    ctx.drawImage(image, 0, 0);
+    const imageData = ctx.getImageData(0, 0, image.width, image.height);
+    return imageData;
+  }
 </script>
