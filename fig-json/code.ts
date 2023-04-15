@@ -2,9 +2,15 @@
 // You can access browser APIs such as the network by creating a UI which contains
 // a full browser environment (see documentation).
 
+const pageName = "pix2fig";
+const compScreenName = "pix2fig-screen";
+const compSmallTitleName = "pix2fig-small-title";
+const compTextBlockName = "pix2fig-text";
+const compButtonName = "pix2fig-button";
+// createScreenNode is a function that creates a screen component. 
 function createScreenNode(): ComponentNode {
   const componentNode = figma.createComponent();
-  componentNode.name = "pix2fig-screen";
+  componentNode.name = compScreenName;
   componentNode.blendMode = "PASS_THROUGH";
 
   componentNode.resize(1280, 832);
@@ -38,11 +44,6 @@ function createScreenNode(): ComponentNode {
   componentNode.strokeWeight = 2;
   componentNode.strokeAlign = "INSIDE";
 
-  // TODO CHANGE THIS: THIS MIGHT NOT BE REQUIRED.
-  // componentNode.fillStyleId = "201:3921";
-  // componentNode.strokeStyleId = "339:3695";
-  // componentNode.effectStyleId = "273:6795";
-
   componentNode.effects = [
     {
       type: "DROP_SHADOW",
@@ -65,10 +66,10 @@ function createScreenNode(): ComponentNode {
   return componentNode;
 }
 
-// TODO: CHANGE THIS TO CREATE A BUTTON NODE.
+// createButtonNode is a function that creates a button component.
 function createButtonNode(): ComponentNode {
   const componentNode = figma.createComponent();
-  componentNode.name = "pix2fig-button";
+  componentNode.name = compButtonName;
   componentNode.blendMode = "PASS_THROUGH";
 
   componentNode.resize(157, 52);
@@ -137,6 +138,13 @@ function createButtonNode(): ComponentNode {
   componentNode.appendChild(inst);
 
   return componentNode;
+}
+
+// createTitleComponentSet is a function that creates a title component set.
+function createTitleComponentSet(comp: Array<ComponentNode>): ComponentSetNode {
+  const componentSet = figma.combineAsVariants(comp, figma.currentPage, 0);
+  componentSet.name = compSmallTitleName;
+  return componentSet;
 }
 
 // createSmallTitleV1 is a function that creates a small title component. V1
@@ -322,45 +330,7 @@ function createSmallTitleV3(): ComponentNode {
 // createTextBlock creates the Text Block Component
 function createTextBlock(): ComponentNode {
   const componentNode = figma.createComponent();
-  componentNode.name = "pix2fig-text";
-  componentNode.blendMode = "PASS_THROUGH";
-
-  componentNode.resize(375, 150);
-  componentNode.x = 0;
-  componentNode.y = -222;
-  componentNode.clipsContent = false;
-  const bg: Paint = {
-    blendMode: "NORMAL",
-    type: "SOLID",
-    color: {
-      r: 0.00095486640930175781,
-      g: 0.14701038599014282,
-      b: 0.2291666716337204,
-    },
-  };
-  componentNode.backgrounds = [bg];
-  componentNode.fills = [bg];
-  componentNode.strokes = [];
-
-  componentNode.strokeWeight = 1;
-  componentNode.strokeAlign = "INSIDE";
-
-  componentNode.layoutMode = "VERTICAL";
-  componentNode.counterAxisSizingMode = "FIXED";
-  componentNode.itemSpacing = 16.0;
-  componentNode.primaryAxisAlignItems = "CENTER";
-  componentNode.paddingLeft = 24.0;
-  componentNode.paddingRight = 24.0;
-  componentNode.paddingTop = 24.0;
-  componentNode.paddingBottom = 24.0;
-  componentNode.effects = [];
-  return componentNode;
-}
-
-// createTextBlock creates the Text Block Component
-function createTextBlockV1(): ComponentNode {
-  const componentNode = figma.createComponent();
-  componentNode.name = "pix2fig-text";
+  componentNode.name = compTextBlockName;
   componentNode.blendMode = "PASS_THROUGH";
 
   componentNode.resize(375, 150);
@@ -489,58 +459,53 @@ function createTextBlockV1(): ComponentNode {
 
 // RUN THE FIGMA PLUGIN.
 async function main() {
-  const nodes: SceneNode[] = [];
-  // const nd = createScreenNode();
-  // const nd2 = createButtonNode();
-  // nodes.push(nd2);
-  // Pushed the created nodes here.
-  // nodes.push(await getCreateNodes());
-  // const cmp = await getComponent();
-  // nodes.push(cmp);
-
-  // title
-  // const title = createSmallTitle();
-  // nodes.push(title);
-
-  // text block
-  // const textBlock = createTextBlock();
-  // nodes.push(textBlock);
-
-  // componen set
-  // createSmallTitleV1();
-  // title.appendChild(textBlock);
-
-  const componentSet = createTitleComponentSet([
-    createSmallTitleV1(),
-    createSmallTitleV2(),
-    createSmallTitleV3(),
-  ]);
-  nodes.push(componentSet);
-
-  // create text block
-  const tb = createTextBlockV1();
-  nodes.push(tb);
-
-  // create button
-  const btn = createButtonNode();
-  nodes.push(btn);
-
-  // create screen
-  const screen = createScreenNode();
-  nodes.push(screen);
-
   // create page
   const page = createPageNode();
+
+  // component nodes
+  // create nodes
+  const nodes: SceneNode[] = [];
+
+  // check if the screen node exists
+  let screenNode = page.findOne((node) => node.name === compScreenName) as ComponentNode;
+  if (!screenNode) {
+    // create screen
+    screenNode = createScreenNode();
+    nodes.push(screenNode);
+  }
+
+  // check if the small title exists
+  let smallTitleNode = page.findOne((node) => node.name === compSmallTitleName) as ComponentSetNode;
+  if (!smallTitleNode) {
+    // create small title
+    smallTitleNode = createTitleComponentSet([
+      createSmallTitleV1(),
+      createSmallTitleV2(),
+      createSmallTitleV3(),
+    ]);
+    nodes.push(smallTitleNode);
+  }
+
+  // check if the text block exists
+  let textBlockNode = page.findOne((node) => node.name === compTextBlockName) as ComponentNode;
+  if (!textBlockNode) {
+    // create text block
+    textBlockNode = createTextBlock();
+    nodes.push(textBlockNode);
+  }
+
+  // check if the button exists
+  let buttonNode = page.findOne((node) => node.name === compButtonName) as ComponentNode;
+  if (!buttonNode) {
+    // create button
+    buttonNode = createButtonNode();
+    nodes.push(buttonNode);
+  }
+  
+  // append nodes to page
   for (let i = 0; i < nodes.length; i++) {
     page.appendChild(nodes[i]);
   }
-  // page.appendChild(nodes);
-
-  
-  // figma.currentPage.selection = nodes;
-  // figma.viewport.scrollAndZoomIntoView(nodes);
-
-  // checkComponent()
 
   // Make sure to close the plugin when you're done. Otherwise the plugin will
   // keep running, which shows the cancel button at the bottom of the screen.
@@ -561,13 +526,6 @@ async function getComponent(): Promise<ComponentNode> {
   return comp;
 }
 
-function createTitleComponentSet(comp: Array<ComponentNode>): ComponentSetNode {
-  const componentSet = figma.combineAsVariants(comp, figma.currentPage, 0);
-
-  componentSet.name = "pix2fig-small-title";
-  return componentSet;
-}
-
 function checkComponent() {
   const comp = figma.currentPage.findOne(
     (node) => node.name === "Property 1=Medium, Default, Dark=True"
@@ -578,9 +536,17 @@ function checkComponent() {
 
 // createPageNode check is there is a page with the name "pix2fig" if not create one.
 function createPageNode():PageNode{
-  const page = figma.createPage();
-  page.name = "pix2fig";
-  return page;
+  // check if there is a page with the name "pix2fig"
+  const page = figma.root.findOne((node) => node.name === pageName) as PageNode;
+  if(page){
+    console.log(`page: ${pageName} already exist`);
+    return page;
+  }
+
+  // create a page with the name "pix2fig"
+  const pg = figma.createPage();
+  pg.name = pageName;
+  return pg;
 }
 
 main();
