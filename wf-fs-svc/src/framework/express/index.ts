@@ -20,6 +20,7 @@ export class ExpressApp{
         this.app.use(express.json());
         this.app.use(cors());
         console.log(this.controller.uploadFileHandler);
+        this.app.get('/', this.controller.homeHandler)
         this.app.get('/status/:id', this.controller.statusFileHandler)
 
         this.app.post('/upload', this.controller.uploadFileHandler)

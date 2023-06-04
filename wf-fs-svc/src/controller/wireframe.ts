@@ -74,4 +74,16 @@ export class WireFrameController {
       next(error);
     }
   };
+
+  homeHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      res.send(`home handler`);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
