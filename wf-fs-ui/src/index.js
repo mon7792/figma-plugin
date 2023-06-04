@@ -15,6 +15,8 @@ app.use(
   express.static("/Volumes/hack/Projects/figma-plugin/wf-fs-ui/src/public")
 );
 
+// app.get("/", (req, res) => res.send("Hello World!"));
+
 // OIDC redirect url
 app.get("/oauth/redirect", (req, res) => {
 

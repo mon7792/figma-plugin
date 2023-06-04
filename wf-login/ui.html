@@ -1,0 +1,22 @@
+<h2>Login</h2>
+<p></p>
+<button id="login">LOGIN</button>
+<script>
+
+document.getElementById('login').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'login' } }, '*')
+}
+
+onmessage = (event) => {
+    // type of the message.
+    // const { type } = event;
+
+
+
+
+
+    console.log('event', event);
+    window.open('https://www.google.com/', '_blank');
+  };
+
+</script>
