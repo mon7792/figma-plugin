@@ -1,0 +1,16 @@
+{
+    "verbose": true,
+    "preset": "ts-jest",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testPathIgnorePatterns": [
+      "<rootDir>[/\\\\](dist|coverage|node_modules)[/\\\\]",
+      "_\\w*.\\w+$"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
+  }

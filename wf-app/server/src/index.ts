@@ -1,9 +1,11 @@
-import { sub } from "./app";
+import express from "express";
 
-// sum returns addition of two numbers a and b.
-export function sum(a: number, b: number): number {
-  return a + b;
-}
+import router from "./routes";
 
+const app = express();
 
-console.log("welcome:", sum(3,2), sub(3,2));
+app.use(router);
+
+app.listen(3000, () => {
+  console.log(`Example app listening on port 3000`);
+});

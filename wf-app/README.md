@@ -12,3 +12,6 @@ WF App or Wireframe App is used for following
 ## Packages
 
 
+## Questions:
+1. what are the different package within the boiler plate and how to keep them up to date.
+2. how should the folder organisation look like
