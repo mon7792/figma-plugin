@@ -1,9 +1,8 @@
 import { Router } from "express";
+import { addTodo } from "../controllers/todos";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-  res.send("welcome to home");
-});
+router.post("/todo", addTodo);
 
 export default router;
