@@ -1,21 +1,34 @@
-import express, { json } from "express";
-
-import router from "./routes";
 import ExpressApp from "./framework/express";
 import { Options } from "./common/env";
 import { getAppOpts } from "./common/env";
+import { TodoDriver } from "./drivers/postgres/todo.drivers";
+import { Postgres } from "./dependencies/postgres";
+import { Pool } from "pg";
 
+async function main() {
+  let opts: Options = getAppOpts();
 
-let opts: Options = getAppOpts()
+  const postgres = new Postgres(
+    opts.dbHostName,
+    opts.dbName,
+    opts.dbUserName,
+    opts.dbPassword,
+    opts.dbPortNo,
+    opts.dbSsl
+  );
 
-const exp = new ExpressApp(opts)
-exp.start()
-// const app = express();
+  let pgPool: Pool;
+  try {
+    pgPool = await postgres.connect();
+  } catch (error) {
+    console.error(`unable to connect to database: error: ${error}`);
+    return process.exit(1);
+  }
 
-// app.use(express.static('public'))
-// app.use(express.json())
-// app.use(router);
+  let todoDriver = new TodoDriver(pgPool);
 
-// app.listen(3000, () => {
-//   console.log(`Example app listening on port 3000`);
-// });
+  const app = new ExpressApp(todoDriver, opts);
+  app.start();
+}
+
+main();

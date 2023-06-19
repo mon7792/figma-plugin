@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
+import { TodoGateway } from "../gateways/todos.gateway";
 
 export class TodoController {
-  constructor() {}
+  public todoGateway: TodoGateway
+  constructor(todoGateway: TodoGateway) {
+    this.todoGateway = todoGateway;
+  }
 
   home = (req: Request, res: Response) => {
     res.send(`{"name":"puzzle-api"}`);
@@ -13,9 +17,10 @@ export class TodoController {
     res.sendStatus(200);
   };
 
-  getTodos = (req: Request, res: Response) => {
+  getTodos = async (req: Request, res: Response) => {
     // 1. extract the todo description from the body.
-    res.send([{ title: "sadfs" }]);
+    let todos = await this.todoGateway.getTodos()
+    res.send(todos);
   };
 
   getTodo = (req: Request, res: Response) => {

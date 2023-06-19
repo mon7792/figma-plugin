@@ -3,6 +3,7 @@ import express from "express";
 import { Options } from "../../common/env";
 import { ErrorHandler } from "./middleware/errors";
 import { TodoController } from "../../controllers/todos";
+import { TodoGateway } from "../../gateways/todos.gateway";
 
 export default class ExpressApp {
   private app: express.Application;
@@ -10,9 +11,9 @@ export default class ExpressApp {
   private todoController: TodoController;
 
 // constructor(gamesRepository: GamesRepository, opts: Options) 
-  constructor(opts: Options) {
+  constructor(todoGateway: TodoGateway,opts: Options) {
     this.app = express();
-    this.todoController = new TodoController()
+    this.todoController = new TodoController(todoGateway)
     this.opts = opts;
   }
 
