@@ -23,7 +23,6 @@ export default class ExpressApp {
     this.app.use(express.static('public'))
     //  json
     this.app.use(json());
-    this.app.get("/", this.todoController.home);
     this.app.get("/todo", this.todoController.getTodos);
     this.app.post("/todo", this.todoController.addTodo);
     this.app.get("/todo/:id", this.todoController.getTodo);

@@ -1,9 +1,11 @@
 import { addTodo } from "../entities/todos";
+import { TodoGateway } from "../gateways/todos.gateway";
 export class AddTodo {
-    constructor(){}
+  constructor(private todoGateway: TodoGateway) {}
 
-    exec(title: string, description: string): void{
-        let tds = addTodo(title, description)
-        console.log(tds)
-    }
+  async exec(title: string): Promise<void> {
+    let tds = addTodo(title, "");
+
+    await this.todoGateway.insertTodo(tds.title);
+  }
 }

@@ -4,3 +4,16 @@ export interface APIResponse {
   type: string;
   message: string;
 }
+
+// TodoResponse contains fields to display todo information.
+export interface TodoResponse {
+  id: string
+  title: string;
+  done: boolean;
+  created_at: number;
+};
+
+// TodoRequest contains title for the new todo.
+export interface TodoRequest {
+  title: string;
+};

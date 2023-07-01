@@ -22,4 +22,13 @@ export class TodoDriver implements TodoGateway{
 
     return task;
   }
+
+
+  async insertTodo(title: string): Promise<void> {
+    const query = `insert into todo(task) values($1)`;
+
+    const values = [title];
+    await this.pgClient.query(query, values);
+    return
+  }
 }

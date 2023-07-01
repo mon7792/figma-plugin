@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import { TodoGateway } from "../gateways/todos.gateway";
+import { TodoRequest } from "../types";
+import { AddTodo } from "../usecases/addtodo.usecase";
 
 export class TodoController {
-  public todoGateway: TodoGateway
+  public todoGateway: TodoGateway;
   constructor(todoGateway: TodoGateway) {
     this.todoGateway = todoGateway;
   }
@@ -11,15 +13,24 @@ export class TodoController {
     res.send(`{"name":"puzzle-api"}`);
   };
 
-  addTodo = (req: Request, res: Response) => {
+  addTodo = async (req: Request, res: Response) => {
     // 1. extract the todo description from the body.
-    console.log(req.body);
+    const newTodo: TodoRequest = req.body as TodoRequest;
+    if (newTodo.title.trim() === "") {
+      res.sendStatus(400);
+      return;
+    }
+
+    // 2. save the title in the database
+    const addTodo = new AddTodo(this.todoGateway);
+    await addTodo.exec(newTodo.title);
+    console.log(`Todo ${newTodo.title} added to the database`);
     res.sendStatus(200);
   };
 
   getTodos = async (req: Request, res: Response) => {
     // 1. extract the todo description from the body.
-    let todos = await this.todoGateway.getTodos()
+    let todos = await this.todoGateway.getTodos();
     res.send(todos);
   };
 
