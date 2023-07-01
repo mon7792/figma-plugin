@@ -1,4 +1,6 @@
+import { TodoResponse } from "../types"
+
 export interface TodoGateway{
-    getTodos(): Promise<Array<string>>
+    getTodos(): Promise<Array<TodoResponse>>
     insertTodo(title: string): Promise<void> 
 }

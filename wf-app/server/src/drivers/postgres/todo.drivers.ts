@@ -1,5 +1,6 @@
 import { Pool } from "pg";
 import { TodoGateway } from "../../gateways/todos.gateway";
+import { TodoResponse } from "../../types";
 
 export class TodoDriver implements TodoGateway{
   private pgClient: Pool;
@@ -8,16 +9,16 @@ export class TodoDriver implements TodoGateway{
     this.pgClient = pgClient;
   }
 
-  async getTodos(): Promise<Array<string>> {
-    const query = `select task from todo`;
+  async getTodos(): Promise<Array<TodoResponse>> {
+    const query = `select id, task, done from todo`;
     const res = await this.pgClient.query(query);
     if (res.rows.length === 0) {
-      return ["notodos"];
+      return [];
     }
 
-    let task: Array<string> = [];
+    let task: Array<TodoResponse> = [];
     res.rows.forEach((elem) => {
-      task.push(elem.task);
+      task.push({id: elem.id, title: elem.task, done: elem.done});
     });
 
     return task;

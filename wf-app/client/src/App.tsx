@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
@@ -8,19 +8,17 @@ function App() {
       id: "1",
       title: "Complete the task",
       done: false,
-      created_at: 1234,
-      updated_at: 2341,
-      done_at: 1324,
     },
     {
       id: "2",
       title: "Complete gym",
       done: false,
-      created_at: 1234,
-      updated_at: 2341,
-      done_at: 1324,
     },
   ]);
+
+  useEffect(() => {
+    getTodos();
+  }, []);
 
   // onInputChange takes care about the input change
   const onInputChange = (e: any) => {
@@ -33,13 +31,14 @@ function App() {
   const onSaveClick = (e: any) => {
     e.preventDefault();
     alert(`TODO : ${title} Saved`);
-    setTitle("");
-
     // a. post the todo
+    saveTodo(title);
+    setTitle("");
     // b. get the new list of todo from the database.
+    getTodos();
   };
 
-  // saveTodo will create a new TODO with the title 
+  // saveTodo will create a new TODO with the title
   const saveTodo = (title: string) => {
     fetch("/todo", {
       method: "POST",
@@ -50,9 +49,9 @@ function App() {
     }).then((response) => response.json());
   };
 
-  // getTodos will retrieve all the TODOS stored in DB. 
+  // getTodos will retrieve all the TODOS stored in DB.
   const getTodos = () => {
-    fetch("/todos", {
+    fetch("/todo", {
       method: "GET",
       headers: new Headers({
         "Content-Type": "application/json",

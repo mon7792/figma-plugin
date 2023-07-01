@@ -10,7 +10,6 @@ export interface TodoResponse {
   id: string
   title: string;
   done: boolean;
-  created_at: number;
 };
 
 // TodoRequest contains title for the new todo.
