@@ -92,6 +92,10 @@ function App() {
           </li>
         ))}
       </ul>
+      <h4> 3rdParty Login</h4>
+      <a href="/auth/github">
+        <button>Login with GITHUB</button>
+      </a>
     </div>
   );
 }

@@ -36,7 +36,7 @@ export const ErrorHandler: ErrorRequestHandler = (
     return;
   }
   
-  console.error(Error.name);
+  console.error(Error);
   res.status(500);
   res.send(SetAPIResponse(500, "oops... something went wrong"));
 };
