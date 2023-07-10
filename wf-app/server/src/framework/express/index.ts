@@ -6,6 +6,7 @@ import { TodoController } from "../../controllers/todos";
 import { TodoGateway } from "../../gateways/todos.gateway";
 import { AuthController } from "../../controllers/auth";
 import session from "express-session"
+import { UserGateway } from "../../gateways/users.gateway";
 
 export default class ExpressApp {
   private app: express.Application;
@@ -14,10 +15,10 @@ export default class ExpressApp {
   private authController: AuthController;
 
   // constructor(gamesRepository: GamesRepository, opts: Options)
-  constructor(todoGateway: TodoGateway, opts: Options) {
+  constructor(todoGateway: TodoGateway, userGateway: UserGateway,opts: Options) {
     this.app = express();
     this.todoController = new TodoController(todoGateway);
-    this.authController = new AuthController();
+    this.authController = new AuthController(userGateway);
     this.opts = opts;
   }
 

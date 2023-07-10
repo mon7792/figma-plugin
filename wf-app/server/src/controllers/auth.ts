@@ -1,11 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import passport, { PassportStatic, use } from "passport";
 import GitHubStrategy from "passport-github";
+import { UserGateway } from "../gateways/users.gateway";
 
 
 export class AuthController {
   passport: PassportStatic;
-  constructor() {
+  userGateway: UserGateway;
+  constructor(userGateway: UserGateway) {
+    this.userGateway = userGateway;
     this.passport = passport.use(
       new GitHubStrategy.Strategy(
         {
@@ -13,7 +16,7 @@ export class AuthController {
           clientSecret: "",
           callbackURL: "",
         },
-        function (
+        async function (
           accessToken: string,
           refreshToken: string,
           results: any,
@@ -21,22 +24,18 @@ export class AuthController {
           done: any
         ) {
           console.log(profile);
+          const id : string = profile.id || ""
+          const username : string = profile.username || ""
+          const email : string = profile._json.email || ""
+          console.log(`adding user ${id}-${username}-${email}`)
+          await userGateway.findOrCreateUser(id, username, email)
           //   User.findOrCreate({ githubId: profile.id }, function (err, user) {
           //     return done(err, user);
           //   });
-          done(null, {id: profile.id})
+          done(null, {id: id})
         }
       )
     );
-
-    // this.passport.serializeUser((user, done)=>{
-    //   done(null, user)
-    // })
-
-    // this.passport.deserializeUser((id, done)=>{
-    //   console.log(id)
-    //   done(null, user)
-    // })
 
     this.passport.serializeUser(function (user, done) {
       done(null, user);
@@ -52,14 +51,14 @@ export class AuthController {
   initialise = () => {
     return this.passport.initialize();
   };
-  // reg = () => {
-  //   this.passport.serializeUser(function (user, done) {
-  //     done(null, user);
-  //   });
-  //   this.passport.deserializeUser(function (user: any, done) {
-  //     done(null, user);
-  //   });
-  // };
+  reg = () => {
+    this.passport.serializeUser(function (user, done) {
+      done(null, user);
+    });
+    this.passport.deserializeUser(function (user: any, done) {
+      done(null, user);
+    });
+  };
   session = () => {
     return this.passport.session();
   };

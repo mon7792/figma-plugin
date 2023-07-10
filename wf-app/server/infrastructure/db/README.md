@@ -27,4 +27,14 @@ CREATE TABLE todo (
   done_at TIMESTAMP
 );
 
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(50) NOT NULL,
+  email VARCHAR(100),
+  github_id VARCHAR(50),
+  github_username VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 ```
