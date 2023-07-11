@@ -7,6 +7,7 @@ import { TodoGateway } from "../../gateways/todos.gateway";
 import { AuthController } from "../../controllers/auth";
 import session from "express-session"
 import { UserGateway } from "../../gateways/users.gateway";
+import cookieSession from "cookie-session";
 
 export default class ExpressApp {
   private app: express.Application;
@@ -23,12 +24,18 @@ export default class ExpressApp {
   }
 
   private register = () => {
-    this.app.use(session({
-      secret: 'keyboard cat',
-      resave: false,
-      saveUninitialized: true,
-      cookie: { secure: true }
+    this.app.use(cookieSession({
+      name: 'session',
+      keys: ['keyboard dog'],
+      // Cookie Options
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }))
+    // this.app.use(session({
+    //   secret: 'keyboard cat',
+    //   resave: false,
+    //   saveUninitialized: true,
+    //   cookie: { secure: true, maxAge: 60 * 60 * 1000  }
+    // }))
     this.app.use(this.authController.initialise());
     this.app.use(this.authController.session());
 
@@ -51,6 +58,8 @@ export default class ExpressApp {
       this.authController.githubCallbackMiddleware(),
       this.authController.callback
     );
+
+    this.app.get("/profile", this.authController.profile);
 
     // All the route should be declared above this route.
     // The 404 Last Route.

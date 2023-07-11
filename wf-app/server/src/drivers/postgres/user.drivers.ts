@@ -1,5 +1,6 @@
 import { Pool } from "pg";
 import { UserGateway } from "../../gateways/users.gateway";
+import { User } from "../../types";
 
 export class UserDriver implements UserGateway {
   private pgClient: Pool;
@@ -8,12 +9,22 @@ export class UserDriver implements UserGateway {
     this.pgClient = pgClient;
   }
 
-  async findOrCreateUser(githubID: string, githubUserName: string, githubEmail: string): Promise<void> {
+  async findOrCreateUser(githubID: string, githubUserName: string, githubEmail: string): Promise<User> {
     const query = `select username from users where github_id = $1`;
     const values = [githubID];
     const res = await this.pgClient.query(query, values);
     if (res.rows.length === 0) {
       await this.createUser(githubID, githubUserName, githubEmail)
+      return {
+        id: githubID,
+        username: githubUserName
+      }
+    }
+
+    console.log(`username: db: ${res.rows[0].username}`)
+    return {
+      id: githubID,
+      username: res.rows[0].username
     }
   }
 

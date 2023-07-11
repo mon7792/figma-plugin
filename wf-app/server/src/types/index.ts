@@ -16,3 +16,9 @@ export interface TodoResponse {
 export interface TodoRequest {
   title: string;
 };
+
+// User info
+export type User = {
+  id?: string
+  username?: string
+}

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import passport, { PassportStatic, use } from "passport";
 import GitHubStrategy from "passport-github";
 import { UserGateway } from "../gateways/users.gateway";
-
+import { User } from "../types";
 
 export class AuthController {
   passport: PassportStatic;
@@ -28,19 +28,19 @@ export class AuthController {
           const username : string = profile.username || ""
           const email : string = profile._json.email || ""
           console.log(`adding user ${id}-${username}-${email}`)
-          await userGateway.findOrCreateUser(id, username, email)
-          //   User.findOrCreate({ githubId: profile.id }, function (err, user) {
-          //     return done(err, user);
-          //   });
-          done(null, {id: id})
+          const user = await userGateway.findOrCreateUser(id, username, email)
+          done(null, user)
         }
       )
     );
 
-    this.passport.serializeUser(function (user, done) {
-      done(null, user);
+    this.passport.serializeUser(function (user: User, done) {
+      console.log(`serialise user: ${user}`)
+      done(null, user.id);
     });
-    this.passport.deserializeUser(function (user: any, done) {
+    this.passport.deserializeUser(async function (id: string, done) {
+      console.log(`deserilaise user id: ${id}`)
+      const user = await userGateway.findOrCreateUser(id, "", "")
       done(null, user);
     });
   }
@@ -51,14 +51,7 @@ export class AuthController {
   initialise = () => {
     return this.passport.initialize();
   };
-  reg = () => {
-    this.passport.serializeUser(function (user, done) {
-      done(null, user);
-    });
-    this.passport.deserializeUser(function (user: any, done) {
-      done(null, user);
-    });
-  };
+
   session = () => {
     return this.passport.session();
   };
@@ -81,7 +74,14 @@ export class AuthController {
   };
 
   callback = (req: Request, res: Response) => {
-    console.log("callback is fired")
-    res.send(`{"name":"redirect"}`);
+    console.log("callback is fired", JSON.stringify(req.user))
+
+    res.redirect("/profile")
+    // res.send(`{"name":"redirect"}`);
+  };
+
+  profile = (req: Request, res: Response) => {
+    console.log("profile is fired", req.user)
+    res.send(`{"username":"${JSON.stringify(req.user)}"}`);
   };
 }
