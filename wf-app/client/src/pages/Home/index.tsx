@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { routes } from "../../routes";
 
 function Home() {
@@ -7,9 +8,7 @@ function Home() {
       <h3>Work on the design for this page</h3>
       <img src="https://placehold.co/600x400" />
       <br/>
-      <a href={routes.APP}>
-        <button>try me</button>
-      </a>
+      <Link to={routes.APP}>try me</Link>
     </div>
   );
 }

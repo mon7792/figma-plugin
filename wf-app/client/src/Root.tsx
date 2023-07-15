@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 
 import { AuthProvider } from "./context/AuthContext";
 import Home from "./pages/Home";
@@ -8,7 +8,7 @@ import Test from "./pages/Test";
 import Navbar from "./components/Navbar";
 
 const Root = () => {
-  const router = createBrowserRouter([
+  const router = createHashRouter([
     {
       path: "/",
       element: <Home />,
