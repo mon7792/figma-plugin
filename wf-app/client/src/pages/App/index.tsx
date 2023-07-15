@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "../../hooks/useUser.hook";
+import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { todos } from "../../type";
+import { useAuth } from "../../hooks/useAuth";
 
 function App() {
-  const navigate = useNavigate();
-  const { user, authenticated } = useUser();
+  const { authUser, login, logout, isLoggedIn, isLoading } = useAuth();
   
-  if (!authenticated) {
-    navigate(routes.LOGIN);
-  }
+  
   const [title, setTitle] = useState<string>("");
   const [todo, setTodo] = useState<Array<todos>>([
     {
@@ -32,7 +29,6 @@ function App() {
   // onInputChange takes care about the input change
   const onInputChange = (e: any) => {
     e.preventDefault();
-    console.log(e.target.value);
     setTitle(e.target.value || "");
   };
 
@@ -85,7 +81,12 @@ function App() {
         setTodo(resp);
       });
   };
-  if (!user) {
+
+  if (!isLoggedIn) {
+    return <Navigate to={routes.LOGIN} />
+  }
+
+  if (isLoading) {
     return (
       <div>
         <h1>loading....</h1>
@@ -108,10 +109,6 @@ function App() {
           </li>
         ))}
       </ul>
-      <h4> 3rdParty Login</h4>
-      <a href="/auth/github">
-        <button>Login with GITHUB</button>
-      </a>
     </div>
   );
 }

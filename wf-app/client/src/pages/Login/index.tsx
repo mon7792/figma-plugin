@@ -1,26 +1,29 @@
-import { useUser } from "../../hooks/useUser.hook";
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../../hooks/useAuth";
+import { Navigate } from 'react-router-dom';
 import { routes } from "../../routes";
 
+
 function Login() {
-  const navigate = useNavigate();
-  const { user, authenticated } = useUser();
-  if (!user) {
+  const { authUser, isLoggedIn, login, logout, isLoading } = useAuth();
+  if (isLoading) {
     return (
       <div>
         <h1>loading....</h1>
       </div>
     );
   }
-  if (user || authenticated) {
-    navigate(routes.APP)
+  
+  if (isLoggedIn) {
+    return <Navigate to={routes.APP} />
   }
+
   return (
     <div className="Login">
       <h1>3rdParty Login</h1>
       <a href={routes.GITHUB_LOGIN}>
         <button>Login with GITHUB</button>
       </a>
+      <button onClick={()=>{login({id: "def", name:"defname", email: "abc@fg.com"})}}>Dummy Login</button>  
     </div>
   );
 }
