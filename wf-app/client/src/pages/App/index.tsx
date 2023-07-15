@@ -1,7 +1,16 @@
-
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../../hooks/useUser.hook";
+import { routes } from "../../routes";
+import { todos } from "../../type";
 
 function App() {
+  const navigate = useNavigate();
+  const { user, authenticated } = useUser();
+  
+  if (!authenticated) {
+    navigate(routes.LOGIN);
+  }
   const [title, setTitle] = useState<string>("");
   const [todo, setTodo] = useState<Array<todos>>([
     {
@@ -76,6 +85,13 @@ function App() {
         setTodo(resp);
       });
   };
+  if (!user) {
+    return (
+      <div>
+        <h1>loading....</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="App">
