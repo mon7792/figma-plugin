@@ -17,14 +17,14 @@ export class UserDriver implements UserGateway {
       await this.createUser(githubID, githubUserName, githubEmail)
       return {
         id: githubID,
-        username: githubUserName
+        name: githubUserName
       }
     }
 
     console.log(`username: db: ${res.rows[0].username}`)
     return {
       id: githubID,
-      username: res.rows[0].username
+      name: res.rows[0].username
     }
   }
 

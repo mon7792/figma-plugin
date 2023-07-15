@@ -3,7 +3,6 @@ import { useUser } from "./useUser";
 import { useLocalStorage } from "./useLocalStorage";
 import { User, AuthState } from "../type";
 
-
 const defUser: User = {
   id: "def",
   name: "def",
@@ -11,16 +10,20 @@ const defUser: User = {
   authToken: "def",
 };
 
-const getUserPofile =(): Promise<AuthState>=> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({isLoggedIn: true, isLoading: false, user: {id: "12", name: "dummy-todo", email: "daf@daf.com"}});
-    }, 2000);
-  });
-}
+const getUser = async (): Promise<User> => {
+  const user = await fetch("/profile");
+  return user.json();
+};
 
 export const useAuth = () => {
-  const { authUser, addUser, isLoggedIn, updateLogInStatus, isLoading, updateLoadingStatus } = useUser();
+  const {
+    authUser,
+    addUser,
+    isLoggedIn,
+    updateLogInStatus,
+    isLoading,
+    updateLoadingStatus,
+  } = useUser();
   const { getItem } = useLocalStorage();
 
   useEffect(() => {
@@ -54,11 +57,17 @@ export const useAuth = () => {
 
   const getUserProfile = async () => {
     updateLoadingStatus(true);
-    const authState = await getUserPofile()
-    addUser(authState.user);
-    updateLogInStatus(authState.isLoggedIn);
-    updateLoadingStatus(authState.isLoading);
-  }
+    try {
+      const user = await getUser();
+      addUser(user);
+      updateLogInStatus(true);
+      updateLoadingStatus(false);
+    } catch (error) {
+      addUser(defUser);
+      updateLogInStatus(false);
+      updateLoadingStatus(false);
+    }
+  };
 
-  return { authUser, isLoading, isLoggedIn, login, logout, getUserPofile };
+  return { authUser, isLoading, isLoggedIn, login, logout, getUserProfile };
 };

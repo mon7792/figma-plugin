@@ -76,12 +76,13 @@ export class AuthController {
   callback = (req: Request, res: Response) => {
     console.log("callback is fired", JSON.stringify(req.user))
 
-    res.redirect("/profile")
-    // res.send(`{"name":"redirect"}`);
+    res.redirect("/#/callback")
   };
 
   profile = (req: Request, res: Response) => {
     console.log("profile is fired", req.user)
-    res.send(`{"username":"${JSON.stringify(req.user)}"}`);
+    res.setHeader('Content-Type', 'application/json');
+    const user: User = req.user as User
+    res.send(user);
   };
 }

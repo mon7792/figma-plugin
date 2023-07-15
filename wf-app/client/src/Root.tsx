@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import App from "./pages/App";
 import Test from "./pages/Test";
 import Navbar from "./components/Navbar";
+import Callback from "./pages/Callback";
 
 const Root = () => {
   const router = createHashRouter([
@@ -24,6 +25,10 @@ const Root = () => {
     {
       path: "/test",
       element: <Test />,
+    },
+    {
+      path: "/callback",
+      element: <Callback />,
     },
   ]);
 
