@@ -5,9 +5,9 @@ import { ErrorHandler } from "./middleware/errors";
 import { TodoController } from "../../controllers/todos";
 import { TodoGateway } from "../../gateways/todos.gateway";
 import { AuthController } from "../../controllers/auth";
-import session from "express-session"
+import session from "express-session";
 import { UserGateway } from "../../gateways/users.gateway";
-import cookieSession from "cookie-session";
+import { AuthHandler } from "./middleware/auth";
 
 export default class ExpressApp {
   private app: express.Application;
@@ -16,7 +16,11 @@ export default class ExpressApp {
   private authController: AuthController;
 
   // constructor(gamesRepository: GamesRepository, opts: Options)
-  constructor(todoGateway: TodoGateway, userGateway: UserGateway,opts: Options) {
+  constructor(
+    todoGateway: TodoGateway,
+    userGateway: UserGateway,
+    opts: Options
+  ) {
     this.app = express();
     this.todoController = new TodoController(todoGateway);
     this.authController = new AuthController(userGateway);
@@ -24,24 +28,25 @@ export default class ExpressApp {
   }
 
   private register = () => {
-    this.app.use(cookieSession({
-      name: 'session',
-      keys: ['keyboard dog'],
-      // Cookie Options
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }))
-    // this.app.use(session({
-    //   secret: 'keyboard cat',
-    //   resave: false,
-    //   saveUninitialized: true,
-    //   cookie: { secure: true, maxAge: 60 * 60 * 1000  }
-    // }))
-    this.app.use(this.authController.initialise());
-    this.app.use(this.authController.session());
+    // client html application
+    this.app.use(express.static("public"));
+
+    // express-session.
+    this.app.use(
+      session({
+        name: "sid",
+        secret: "keyboard cat",
+        resave: false,
+        saveUninitialized: true,
+        cookie: { maxAge: 60 * 60 * 1000 * 8 },
+      })
+    );
+    this.app.use(this.authController.passport.initialize());
+    this.app.use(this.authController.passport.session());
 
     // rate-limit: TODO: work on the rate limiting metrics
     // static
-    this.app.use(express.static("public"));
+
     //  json
     this.app.use(json());
     this.app.get("/todo", this.todoController.getTodos);
@@ -52,7 +57,7 @@ export default class ExpressApp {
     // auth routes
     this.app.get("/auth/login", this.authController.login);
     this.app.get("/auth/logout", this.authController.logout);
-    this.app.get("/auth/github",this.authController.github());
+    this.app.get("/auth/github", this.authController.github());
     this.app.get(
       "/auth/github/callback",
       this.authController.githubCallbackMiddleware(),
@@ -60,6 +65,12 @@ export default class ExpressApp {
     );
 
     this.app.get("/profile", this.authController.profile);
+    this.app.get(
+      "/profile-secure",
+      AuthHandler,
+      this.authController.profileSecure
+    );
+    this.app.get("/profile-un-secure", this.authController.profileUnSecure);
 
     // All the route should be declared above this route.
     // The 404 Last Route.

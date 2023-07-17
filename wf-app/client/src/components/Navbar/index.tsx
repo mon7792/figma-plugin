@@ -1,16 +1,25 @@
 import { useAuth } from "../../hooks/useAuth";
+import { routes } from "../../routes";
 
 const Navbar = () => {
+  const { authUser, isLoggedIn } = useAuth();
 
-    const { authUser, isLoggedIn, logout } = useAuth();
-    return (
-        <nav>
-            <ul>
-                <li>HOME</li>
-                {isLoggedIn? <li><button onClick={logout}>LOGOUT</button></li>:<></>}
-            </ul>
-        </nav>
-    )
-}
+  return (
+    <nav>
+      <ul>
+        <li>HOME</li>
+        {isLoggedIn ? (
+          <li>
+            <a href={routes.LOGOUT}>
+              <button>LOGOUT</button>
+            </a>
+          </li>
+        ) : (
+          <></>
+        )}
+      </ul>
+    </nav>
+  );
+};
 
 export default Navbar;

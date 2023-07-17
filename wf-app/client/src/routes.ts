@@ -4,5 +4,6 @@ export const routes = {
     APP: "/app",
 
     // TODO
-    GITHUB_LOGIN: "/auth/github"
+    GITHUB_LOGIN: "/auth/github",
+    LOGOUT: "/auth/logout",
 }
