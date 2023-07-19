@@ -5,6 +5,7 @@ import { TodoDriver } from "./drivers/postgres/todo.drivers";
 import { Postgres } from "./dependencies/postgres";
 import { Pool } from "pg";
 import { UserDriver } from "./drivers/postgres/user.drivers";
+import { Redis } from "./dependencies/redis";
 
 async function main() {
   let opts: Options = getAppOpts();
@@ -26,11 +27,19 @@ async function main() {
     return process.exit(1);
   }
 
+  const redis = new Redis()
+  try {
+      await redis.connect();
+  } catch (error) {
+    console.error(`unable to connect to cache: error: ${error}`);
+    return process.exit(1);
+  }
+
   let todoDriver = new TodoDriver(pgPool);
   let userDriver = new UserDriver(pgPool);
 
   const app = new ExpressApp(todoDriver, userDriver, opts);
-  app.start();
+  app.start(redis.Store());
 }
 
 main();

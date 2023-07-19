@@ -8,6 +8,7 @@ import { AuthController } from "../../controllers/auth";
 import session from "express-session";
 import { UserGateway } from "../../gateways/users.gateway";
 import { AuthHandler } from "./middleware/auth";
+import RedisStore from "connect-redis";
 
 export default class ExpressApp {
   private app: express.Application;
@@ -27,7 +28,7 @@ export default class ExpressApp {
     this.opts = opts;
   }
 
-  private register = () => {
+  private register = (store: RedisStore) => {
     // client html application
     this.app.use(express.static("public"));
 
@@ -39,6 +40,7 @@ export default class ExpressApp {
         resave: false,
         saveUninitialized: true,
         cookie: { maxAge: 60 * 60 * 1000 * 8 },
+        // store: store,
       })
     );
     this.app.use(this.authController.passport.initialize());
@@ -83,8 +85,8 @@ export default class ExpressApp {
     this.app.use(ErrorHandler);
   };
 
-  start() {
-    this.register();
+  start(store: RedisStore) {
+    this.register(store);
 
     this.app.listen(this.opts.apiPortNo, () => {
       console.log("Server listening on port 8080");

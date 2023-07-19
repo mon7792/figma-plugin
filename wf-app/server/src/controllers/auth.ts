@@ -15,7 +15,7 @@ export class AuthController {
         {
           clientID: "",
           clientSecret: "",
-          callbackURL: "",
+          callbackURL: ""
         },
         async function (
           accessToken: string,
