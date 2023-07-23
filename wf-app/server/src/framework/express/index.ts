@@ -40,7 +40,7 @@ export default class ExpressApp {
         resave: false,
         saveUninitialized: true,
         cookie: { maxAge: 60 * 60 * 1000 * 8 },
-        // store: store,
+        store: store,
       })
     );
     this.app.use(this.authController.passport.initialize());
