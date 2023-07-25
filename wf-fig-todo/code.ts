@@ -23,18 +23,15 @@ if (figma.editorType === "figma") {
     // One way of distinguishing between different types of messages sent from
     // your HTML page is to use an object with a "type" property like this.
     if (msg.type === "create-todo") {
-      const nodes: SceneNode[] = [];
+      // const nodes: SceneNode[] = [];
       // const textNode = figma.createText()
       // textNode.x = 150
       // textNode.fontSize = 130;
       // textNode.characters = msg.textbox;
-      const textNode = await createTextNode(msg.textbox);
+      const urlList = randomURLGen()
 
-      figma.currentPage.appendChild(textNode);
-      nodes.push(textNode);
+      figma.ui.postMessage({ type: 'load-img', data: urlList })
 
-      figma.currentPage.selection = nodes;
-      figma.viewport.scrollAndZoomIntoView(nodes);
     }
 
     if (msg.type === "drop-img") {
@@ -157,10 +154,8 @@ async function createTextNode(txt: string): Promise<TextNode> {
   return text;
 }
 
-async function name(charCount: number) {
-  const response = await fetch(
-    `https://rickandmortyapi.com/api/character/avatar/${charCount}.jpeg`
-  );
+function urlName(charCount: number): string {
+  return `https://rickandmortyapi.com/api/character/avatar/${charCount}.jpeg`;
 }
 
 // (async () => {
@@ -176,22 +171,32 @@ async function name(charCount: number) {
 //   figma.closePlugin();
 // })();
 
-
 async function createImage(src: string): Promise<RectangleNode> {
   const image = await figma.createImageAsync(src);
 
-  const node = figma.createRectangle()
+  const node = figma.createRectangle();
 
-  const { width, height } = await image.getSizeAsync()
-  node.resize(width, height)
+  const { width, height } = await image.getSizeAsync();
+  node.resize(width, height);
 
   // Render the image by filling the rectangle.
   node.fills = [
     {
-      type: 'IMAGE',
+      type: "IMAGE",
       imageHash: image.hash,
-      scaleMode: 'FILL'
-    }
-  ]
+      scaleMode: "FILL",
+    },
+  ];
   return node;
+}
+
+function randomURLGen(): Array<string> {
+  let url: Array<string> = [];
+  url.push(
+    urlName(Math.round(Math.random() * 800)),
+    urlName(Math.round(Math.random() * 800)),
+    urlName(Math.round(Math.random() * 800)),
+    urlName(Math.round(Math.random() * 800))
+  );
+  return url;
 }
