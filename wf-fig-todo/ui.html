@@ -30,10 +30,34 @@
 
 <button id="create" class="button button--primary">Create</button>
 <button id="cancel" class="button button--secondary-destructive">Cancel</button>
-<img src="https://rickandmortyapi.com/api/character/avatar/20.jpeg" width="44em" height="54em">
-<img src="https://rickandmortyapi.com/api/character/avatar/21.jpeg" width="44em" height="54em">
-<img src="https://rickandmortyapi.com/api/character/avatar/22.jpeg" width="44em" height="54em">
-<img src="https://rickandmortyapi.com/api/character/avatar/23.jpeg" width="44em" height="54em">
+<img
+  class="gen-img"
+  src="https://rickandmortyapi.com/api/character/avatar/20.jpeg"
+  width="44em"
+  height="54em"
+  draggable="true"
+/>
+<img
+  class="gen-img"
+  src="https://rickandmortyapi.com/api/character/avatar/21.jpeg"
+  width="44em"
+  height="54em"
+  draggable="true"
+/>
+<img
+  class="gen-img"
+  src="https://rickandmortyapi.com/api/character/avatar/22.jpeg"
+  width="44em"
+  height="54em"
+  draggable="true"
+/>
+<img
+  class="gen-img"
+  src="https://rickandmortyapi.com/api/character/avatar/23.jpeg"
+  width="44em"
+  height="54em"
+  draggable="true"
+/>
 <script>
   document.getElementById("create").onclick = () => {
     const textbox = document.getElementById("todo").value;
@@ -46,4 +70,64 @@
   document.getElementById("cancel").onclick = () => {
     parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
   };
+</script>
+
+<script>
+  // Initialize offset variables to be assigned later
+  let offsetX = 0;
+  let offsetY = 0;
+
+  let genImgElem = document.querySelectorAll(".gen-img");
+  genImgElem.forEach((elem) => {
+    elem.addEventListener("dragstart", (e) => {
+      // Getting the offset position (The position of the cursor relative to the top-left corner of item being dragged)
+      offsetX = e.offsetX;
+      offsetY = e.offsetY;
+    });
+
+    elem.addEventListener("dragend", (e) => {
+      // Don't proceed if the item was dropped inside the plugin window.
+      if (e.view.length === 0) return;
+
+      // Getting the position of the cursor relative to the top-left corner of the browser page (Where the hamburger icon is)
+      const dropPosition = {
+        clientX: e.clientX,
+        clientY: e.clientY,
+      };
+
+      // Getting the size of the app/browser window.
+      const windowSize = {
+        width: window.outerWidth,
+        height: window.outerHeight,
+      };
+
+      // These are the offsets set from the dragstart event.
+      const offset = {
+        x: offsetX,
+        y: offsetY,
+      };
+
+      const itemSize = {
+        width: e.target.clientWidth,
+        height: e.target.clientHeight,
+      };
+
+      const src = e.target.src
+
+      // Sending the variables over to the main code.
+      window.parent.postMessage(
+        {
+          pluginMessage: {
+            type: "drop-img",
+            dropPosition,
+            windowSize,
+            offset,
+            itemSize,
+            src,
+          },
+        },
+        "*"
+      );
+    });
+  });
 </script>
