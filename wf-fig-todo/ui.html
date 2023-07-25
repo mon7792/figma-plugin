@@ -1,0 +1,49 @@
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/figma-plugin-ds@1.0.1/dist/figma-plugin-ds.css"
+/>
+<style>
+  input {
+    display: block;
+  }
+
+  body {
+    background-color: var(--figma-color-bg);
+    color: var(--figma-color-text);
+    padding: 2em;
+  }
+
+  div {
+    margin: 1em;
+  }
+</style>
+<h2>TODO Creator</h2>
+<div class="input">
+  <input
+    id="todo"
+    class="input__field"
+    type="text"
+    value=""
+    placeholder="enter your todo"
+  />
+</div>
+
+<button id="create" class="button button--primary">Create</button>
+<button id="cancel" class="button button--secondary-destructive">Cancel</button>
+<img src="https://rickandmortyapi.com/api/character/avatar/20.jpeg" width="44em" height="54em">
+<img src="https://rickandmortyapi.com/api/character/avatar/21.jpeg" width="44em" height="54em">
+<img src="https://rickandmortyapi.com/api/character/avatar/22.jpeg" width="44em" height="54em">
+<img src="https://rickandmortyapi.com/api/character/avatar/23.jpeg" width="44em" height="54em">
+<script>
+  document.getElementById("create").onclick = () => {
+    const textbox = document.getElementById("todo").value;
+    parent.postMessage(
+      { pluginMessage: { type: "create-todo", textbox } },
+      "*"
+    );
+  };
+
+  document.getElementById("cancel").onclick = () => {
+    parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
+  };
+</script>

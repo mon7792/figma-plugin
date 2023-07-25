@@ -1,7 +1,9 @@
 # figma-plugin
 
 
-## HTML EXPORTER PLUGIN
+# Projects
 
-1. build a button components using figma 
-2. use the above figma component to build html code. 
+## WF-FIG-TODO 
+The Project contains 
+1. call to api.
+2. drop the images received from plugin to figma canvas 

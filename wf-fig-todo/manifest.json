@@ -1,0 +1,19 @@
+{
+  "name": "wf-fig-todo",
+  "id": "1265363613472943668",
+  "api": "1.0.0",
+  "main": "code.js",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": [
+    "figma",
+    "figjam"
+  ],
+  "ui": "ui.html",
+  "networkAccess": {
+    "allowedDomains": [
+      "cdn.jsdelivr.net",
+      "rickandmortyapi.com"
+    ]
+  }
+}
