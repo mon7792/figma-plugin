@@ -38,8 +38,8 @@ async function main() {
   let todoDriver = new TodoDriver(pgPool);
   let userDriver = new UserDriver(pgPool);
 
-  const app = new ExpressApp(todoDriver, userDriver, opts);
-  app.start(redis.Store());
+  const app = new ExpressApp(todoDriver, userDriver, redis.Store(), opts);
+  app.start();
 }
 
 main();

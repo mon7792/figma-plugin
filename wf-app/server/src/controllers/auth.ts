@@ -1,14 +1,16 @@
 import { NextFunction, Response, Request } from "express";
-// import { Express } from "express";
-import passport, { PassportStatic, use } from "passport";
+import passport, { PassportStatic } from "passport";
 import GitHubStrategy from "passport-github";
 import { UserGateway } from "../gateways/users.gateway";
 import { User } from "../types";
+import { AuthFigmaGateway } from "../gateways/auth.figma.gateway";
+import { AuthFigma } from "../usecases/authfigma.usecase";
 
 export class AuthController {
   passport: PassportStatic;
   userGateway: UserGateway;
-  constructor(userGateway: UserGateway) {
+  authFigma: AuthFigma;
+  constructor(userGateway: UserGateway, authFigma: AuthFigma) {
     this.userGateway = userGateway;
     this.passport = passport.use(
       new GitHubStrategy.Strategy(
@@ -44,6 +46,8 @@ export class AuthController {
       const user = await userGateway.findOrCreateUser(id, "", "");
       done(null, user);
     });
+
+    this.authFigma =authFigma;
   }
 
   passobj = () => {
@@ -56,6 +60,7 @@ export class AuthController {
   session = () => {
     return this.passport.session();
   };
+
   login = (req: Request, res: Response) => {
     console.log("login is fired");
     res.send(`{"name":"login route"}`);
@@ -106,5 +111,13 @@ export class AuthController {
     console.log("profile is un-secure");
     res.setHeader("Content-Type", "application/json");
     res.send(`{"user": "un-secure"}`);
+  };
+
+  // getfigmaKeys will generate and return the figma keys. 
+  getfigmaKeys = async (req: Request, res: Response) => {
+    const keys =  await this.authFigma.getKeys();
+    console.log("profile is un-secure");
+    res.setHeader("Content-Type", "application/json");
+    res.send(`{"rKey": "${keys[0]}", "wKey": "${keys[1]}"}`);
   };
 }

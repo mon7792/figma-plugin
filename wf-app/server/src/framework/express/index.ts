@@ -15,20 +15,22 @@ export default class ExpressApp {
   private opts: Options; // todo start from here.
   private todoController: TodoController;
   private authController: AuthController;
+  private sessionStore: RedisStore;
 
-  // constructor(gamesRepository: GamesRepository, opts: Options)
   constructor(
     todoGateway: TodoGateway,
     userGateway: UserGateway,
+    sessionStore: RedisStore,
     opts: Options
   ) {
     this.app = express();
     this.todoController = new TodoController(todoGateway);
     this.authController = new AuthController(userGateway);
+    this.sessionStore = sessionStore;
     this.opts = opts;
   }
 
-  private register = (store: RedisStore) => {
+  private register = () => {
     // client html application
     this.app.use(express.static("public"));
 
@@ -40,7 +42,7 @@ export default class ExpressApp {
         resave: false,
         saveUninitialized: true,
         cookie: { maxAge: 60 * 60 * 1000 * 8 },
-        store: store,
+        store: this.sessionStore,
       })
     );
     this.app.use(this.authController.passport.initialize());
@@ -74,6 +76,10 @@ export default class ExpressApp {
     );
     this.app.get("/profile-un-secure", this.authController.profileUnSecure);
 
+    // figma login
+    this.app.get("/auth/figma/keys", this.authController.login);
+    this.app.get("/auth/figma/login", this.authController.login);
+
     // All the route should be declared above this route.
     // The 404 Last Route.
     this.app.get("*", function (req, res) {
@@ -85,8 +91,8 @@ export default class ExpressApp {
     this.app.use(ErrorHandler);
   };
 
-  start(store: RedisStore) {
-    this.register(store);
+  start() {
+    this.register();
 
     this.app.listen(this.opts.apiPortNo, () => {
       console.log("Server listening on port 8080");
