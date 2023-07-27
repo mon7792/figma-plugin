@@ -9,8 +9,8 @@ import { AuthFigma } from "../usecases/authfigma.usecase";
 export class AuthController {
   passport: PassportStatic;
   userGateway: UserGateway;
-  authFigma: AuthFigma;
-  constructor(userGateway: UserGateway, authFigma: AuthFigma) {
+  authFigmaGateway: AuthFigmaGateway;
+  constructor(userGateway: UserGateway, authFigmaGateway: AuthFigmaGateway) {
     this.userGateway = userGateway;
     this.passport = passport.use(
       new GitHubStrategy.Strategy(
@@ -47,7 +47,7 @@ export class AuthController {
       done(null, user);
     });
 
-    this.authFigma =authFigma;
+    this.authFigmaGateway =authFigmaGateway;
   }
 
   passobj = () => {
@@ -115,7 +115,8 @@ export class AuthController {
 
   // getfigmaKeys will generate and return the figma keys. 
   getfigmaKeys = async (req: Request, res: Response) => {
-    const keys =  await this.authFigma.getKeys();
+    const authFigma = new AuthFigma(this.authFigmaGateway);
+    const keys =  await authFigma.getKeys();
     console.log("profile is un-secure");
     res.setHeader("Content-Type", "application/json");
     res.send(`{"rKey": "${keys[0]}", "wKey": "${keys[1]}"}`);

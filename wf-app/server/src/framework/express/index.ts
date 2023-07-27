@@ -9,6 +9,7 @@ import session from "express-session";
 import { UserGateway } from "../../gateways/users.gateway";
 import { AuthHandler } from "./middleware/auth";
 import RedisStore from "connect-redis";
+import { AuthFigmaGateway } from "../../gateways/auth.figma.gateway";
 
 export default class ExpressApp {
   private app: express.Application;
@@ -20,12 +21,13 @@ export default class ExpressApp {
   constructor(
     todoGateway: TodoGateway,
     userGateway: UserGateway,
+    authFigmaGateway: AuthFigmaGateway,
     sessionStore: RedisStore,
     opts: Options
   ) {
     this.app = express();
     this.todoController = new TodoController(todoGateway);
-    this.authController = new AuthController(userGateway);
+    this.authController = new AuthController(userGateway, authFigmaGateway);
     this.sessionStore = sessionStore;
     this.opts = opts;
   }

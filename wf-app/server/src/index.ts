@@ -6,6 +6,7 @@ import { Postgres } from "./dependencies/postgres";
 import { Pool } from "pg";
 import { UserDriver } from "./drivers/postgres/user.drivers";
 import { Redis } from "./dependencies/redis";
+import { AuthFigmaDriver } from "./drivers/redis/auth.figma.gateway";
 
 async function main() {
   let opts: Options = getAppOpts();
@@ -37,8 +38,9 @@ async function main() {
 
   let todoDriver = new TodoDriver(pgPool);
   let userDriver = new UserDriver(pgPool);
+  let authFigmaDriver = new AuthFigmaDriver(redis.client)
 
-  const app = new ExpressApp(todoDriver, userDriver, redis.Store(), opts);
+  const app = new ExpressApp(todoDriver, userDriver, authFigmaDriver, redis.Store(), opts);
   app.start();
 }
 
