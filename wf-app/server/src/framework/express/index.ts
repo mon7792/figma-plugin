@@ -79,8 +79,9 @@ export default class ExpressApp {
     this.app.get("/profile-un-secure", this.authController.profileUnSecure);
 
     // figma login
-    this.app.get("/auth/figma/keys", this.authController.login);
-    this.app.get("/auth/figma/login", this.authController.login);
+    this.app.get("/auth/figma/keys", this.authController.getfigmaKeys);
+    this.app.get("/auth/figma/key/status", this.authController.getfigmaKeyStatus);
+    this.app.get("/auth/figma/login", this.authController.figmaLoginMiddleware,this.authController.github());
 
     // All the route should be declared above this route.
     // The 404 Last Route.

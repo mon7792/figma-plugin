@@ -17,7 +17,7 @@ export class AuthController {
         {
           clientID: "",
           clientSecret: "",
-          callbackURL: ""
+          callbackURL: "",
         },
         async function (
           accessToken: string,
@@ -47,7 +47,7 @@ export class AuthController {
       done(null, user);
     });
 
-    this.authFigmaGateway =authFigmaGateway;
+    this.authFigmaGateway = authFigmaGateway;
   }
 
   passobj = () => {
@@ -75,7 +75,7 @@ export class AuthController {
     });
   };
 
-  github = (): ((req: Request, res: Response) => void) => {
+  github = (): ((req: Request, res: Response) => void) => { 
     return this.passport.authenticate("github", { scope: ["user:email"] });
   };
 
@@ -89,6 +89,7 @@ export class AuthController {
 
   callback = (req: Request, res: Response) => {
     console.log("callback is fired", JSON.stringify(req.user));
+  
     // req.session.userID = req.user
 
     res.redirect("/#/callback");
@@ -113,12 +114,72 @@ export class AuthController {
     res.send(`{"user": "un-secure"}`);
   };
 
-  // getfigmaKeys will generate and return the figma keys. 
+  // getfigmaKeys will generate and return the figma keys.
   getfigmaKeys = async (req: Request, res: Response) => {
     const authFigma = new AuthFigma(this.authFigmaGateway);
-    const keys =  await authFigma.getKeys();
+    const keys = await authFigma.getKeys();
     console.log("profile is un-secure");
+    // console.log(req.cookies);
     res.setHeader("Content-Type", "application/json");
-    res.send(`{"rKey": "${keys[0]}", "wKey": "${keys[1]}"}`);
+    res.send(`{"rKey": "${keys[0]}", "wKey": "${keys[1]}", "wSessionID": "${req.session.id}"}`);
   };
+
+  getfigmaKeyStatus = async (req: Request, res: Response) => {
+    
+    
+    // get the session info associated with read key->write key-> session id
+    // check if the user exists & logged in.
+    // return key as encrypted with token in body
+
+    // extract read keys from body
+    const rKey : string = req.header("x-read-key") as string || ""
+
+    if(rKey.trim() === ""){
+      res.setHeader("Content-Type", "application/json");
+      res.send("read key cannot be empty");
+      return
+    }
+
+    const authFigma = new AuthFigma(this.authFigmaGateway);
+    // check if the key exists.
+    const exists = await authFigma.checkKey(rKey);
+    if (!exists){
+      res.setHeader("Content-Type", "application/json");
+      res.send("read key not present");
+      return
+    }
+
+    // get the session info associated with read key->write key-> session id
+
+    const result = await authFigma.checkSessionAuthenticated(rKey, "keyboard cat");
+    if (result === ""){
+      res.setHeader("Content-Type", "application/json");
+      res.send("not authenticated yet");
+      return
+    }
+
+    // console.log("profile is un-secure");
+    res.setHeader("Content-Type", "application/json");
+    res.send(`{"key": "${result}", "authenticated": true}`);
+  };
+
+  figmaLoginMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const loginWkey: string = req.query.loginWKey as string || "";
+    console.log("session-id:",req.session.id)
+    if (loginWkey.trim() === "") {
+      res.send("login key not set");
+      return;
+    }
+    const authFigma = new AuthFigma(this.authFigmaGateway);
+    // check if the Auth Key Exists
+    const keyStatus = await authFigma.checkKey(loginWkey)
+    if (!keyStatus){
+      res.send("invalid login key, close the current tab and try again.");
+      return;
+    }
+    
+    // set the Wkey &Session ID
+    await authFigma.setWKeyAndSessionID(loginWkey, req.session.id);
+    next();
+  }; 
 }
