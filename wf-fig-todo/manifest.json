@@ -12,9 +12,8 @@
   "ui": "ui.html",
   "networkAccess": {
     "allowedDomains": [
-      "cdn.jsdelivr.net",
-      "rickandmortyapi.com",
-      "rsms.me"
-    ]
+      "*"
+    ],
+    "reasoning": "Development setup"
   }
 }

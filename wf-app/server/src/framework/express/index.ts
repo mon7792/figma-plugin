@@ -10,6 +10,7 @@ import { UserGateway } from "../../gateways/users.gateway";
 import { AuthHandler } from "./middleware/auth";
 import RedisStore from "connect-redis";
 import { AuthFigmaGateway } from "../../gateways/auth.figma.gateway";
+import cors from "cors";
 
 export default class ExpressApp {
   private app: express.Application;
@@ -35,6 +36,7 @@ export default class ExpressApp {
   private register = () => {
     // client html application
     this.app.use(express.static("public"));
+    this.app.use(cors());
 
     // express-session.
     this.app.use(

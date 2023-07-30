@@ -28,9 +28,11 @@ if (figma.editorType === "figma") {
       // textNode.x = 150
       // textNode.fontSize = 130;
       // textNode.characters = msg.textbox;
-      const urlList = randomURLGen()
+      // const urlList = randomURLGen()
 
-      figma.ui.postMessage({ type: 'load-img', data: urlList })
+      const todoList = await getTodo(msg.textbox)
+
+      figma.ui.postMessage({ type: 'load-img', data: todoList })
 
     }
 
@@ -199,4 +201,36 @@ function randomURLGen(): Array<string> {
     urlName(Math.round(Math.random() * 800))
   );
   return url;
+}
+
+// createTodo will post the response and send the request.
+async function createTodo(data: string):Promise<void>{
+
+  const body = {
+    todo: data
+  }
+
+  const response = await fetch("http://localhost:8080/todo", {
+    method: "POST", 
+    cache: "no-cache",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+
+type todo = {
+  id: number,
+  title: string,
+  done: boolean
+
+}
+
+// getTodo will get the image response.
+async function getTodo(data: string):Promise<Array<todo>>{
+  const response = await fetch(`http://localhost:8080/todo?title=${data}`);
+  const json: Array<todo> = await response.json()
+  return json
 }

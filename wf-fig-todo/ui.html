@@ -165,7 +165,7 @@
   
   addImgListener()
 </script>
-<script>
+<!-- <script>
   window.onmessage = async (event) => {
     // Just get the bytes directly from the pluginMessage since
     // that's the only type of message we'll receive in this
@@ -192,4 +192,28 @@
 
     addImgListener()
   };
+</script> -->
+
+<script>
+  window.onmessage = async (event) => {
+    // Just get the bytes directly from the pluginMessage since
+    // that's the only type of message we'll receive in this
+    // plugin. In more complex plugins, you'll want to check the
+    // type of the message.
+    const { type, data } = event.data.pluginMessage;
+
+    console.log("event", data);
+
+    let elem = document.getElementById("result-box");
+
+    data.forEach((ur) => {
+      elem.innerHTML += `
+    <div class="result-box-img" draggable="true">
+    <h3>${ur.title}</h3>
+  </div>`;
+    });
+
+    addImgListener()
+  };
 </script>
+
