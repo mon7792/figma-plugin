@@ -15,9 +15,9 @@ export class AuthController {
     this.passport = passport.use(
       new GitHubStrategy.Strategy(
         {
-          clientID: "",
-          clientSecret: "",
-          callbackURL: "",
+          clientID: "6142976f939897fe33a5",
+          clientSecret: "4e556615fa3c32c6f58d57e34af7808e247d6b43",
+          callbackURL: "http://localhost:8080/auth/github/callback",
         },
         async function (
           accessToken: string,
