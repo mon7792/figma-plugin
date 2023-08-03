@@ -9,6 +9,9 @@ export type Options = {
     dbPortNo: number;
     dbSsl: boolean;
     cronInterval: string;
+    sessionName: string;
+    sessionSecret: string;
+    sessionMaxAge: number;
   };
   
   const defOption: Options = {
@@ -22,6 +25,9 @@ export type Options = {
     dbPortNo: 5432,
     dbSsl: false,
     cronInterval: "*/5 * * * * *",
+    sessionName: "sid",
+    sessionSecret: "keyboard cat",
+    sessionMaxAge: 60 * 60 * 1000 * 8,
   };
   
   // getAppOpts returns all the environment variables.

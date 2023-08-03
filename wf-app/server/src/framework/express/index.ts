@@ -14,7 +14,7 @@ import cors from "cors";
 
 export default class ExpressApp {
   private app: express.Application;
-  private opts: Options; // todo start from here.
+  private opts: Options;
   private todoController: TodoController;
   private authController: AuthController;
   private sessionStore: RedisStore;
@@ -36,16 +36,17 @@ export default class ExpressApp {
   private register = () => {
     // client html application
     this.app.use(express.static("public"));
+    // TODO: reworks cors
     this.app.use(cors());
 
     // express-session.
     this.app.use(
       session({
-        name: "sid",
-        secret: "keyboard cat",
+        name: this.opts.sessionName,
+        secret: this.opts.sessionSecret,
         resave: false,
         saveUninitialized: true,
-        cookie: { maxAge: 60 * 60 * 1000 * 8 },
+        cookie: { maxAge: this.opts.sessionMaxAge },
         store: this.sessionStore,
       })
     );
