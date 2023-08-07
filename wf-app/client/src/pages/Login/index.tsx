@@ -20,8 +20,8 @@ function Login() {
   return (
     <div className="Login">
       <h1>3rdParty Login</h1>
-      <a href={routes.GITHUB_LOGIN}>
-        <button>Login with GITHUB</button>
+      <a href={routes.GOOGLE_LOGIN}>
+        <button>Login with GOOGLE</button>
       </a>
       <button onClick={()=>{login({id: "def", name:"defname", email: "abc@fg.com"})}}>Dummy Login</button>  
     </div>

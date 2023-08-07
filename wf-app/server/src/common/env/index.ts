@@ -31,9 +31,9 @@ const defOption: Options = {
   sessionName: "sid",
   sessionSecret: "keyboard cat",
   sessionMaxAge: 60 * 60 * 1000 * 8,
-  outhClientID: "6142976f939897fe33a5",
-  outhClientSecret: "4e556615fa3c32c6f58d57e34af7808e247d6b43",
-  outhCallbackUrl: "http://localhost:8080/auth/github/callback",
+  outhClientID: "1055539632898-dn1as7ln4sak9h28icntov5nqioc7ral.apps.googleusercontent.com",
+  outhClientSecret: "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",
+  outhCallbackUrl: "http://127.0.0.1:8080/auth/google/callback",
 };
 
 // getAppOpts returns all the environment variables.

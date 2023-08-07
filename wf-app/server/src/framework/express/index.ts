@@ -28,7 +28,11 @@ export default class ExpressApp {
   ) {
     this.app = express();
     this.todoController = new TodoController(todoGateway);
-    this.authController = new AuthController(userGateway, authFigmaGateway, opts);
+    this.authController = new AuthController(
+      userGateway,
+      authFigmaGateway,
+      opts
+    );
     this.sessionStore = sessionStore;
     this.opts = opts;
   }
@@ -58,18 +62,15 @@ export default class ExpressApp {
 
     //  json
     this.app.use(json());
-    this.app.get("/todo", this.todoController.getTodos);
-    this.app.post("/todo", this.todoController.addTodo);
-    this.app.get("/todo/:id", this.todoController.getTodo);
-    this.app.put("/todo/:id", this.todoController.updateTodo);
+    this.app.get("/todo", AuthHandler, this.todoController.getTodos);
+    this.app.post("/todo", AuthHandler, this.todoController.addTodo);
 
     // auth routes
-    this.app.get("/auth/login", this.authController.login);
     this.app.get("/auth/logout", this.authController.logout);
-    this.app.get("/auth/github", this.authController.f());
+    this.app.get("/auth/google", this.authController.google());
     this.app.get(
-      "/auth/github/callback",
-      this.authController.githubCallbackMiddleware(),
+      "/auth/google/callback",
+      this.authController.googleCallbackMiddleware(),
       this.authController.callback
     );
 
@@ -83,8 +84,15 @@ export default class ExpressApp {
 
     // figma login
     this.app.get("/auth/figma/keys", this.authController.getfigmaKeys);
-    this.app.get("/auth/figma/key/status", this.authController.getfigmaKeyStatus);
-    this.app.get("/auth/figma/login", this.authController.figmaLoginMiddleware,this.authController.github());
+    this.app.get(
+      "/auth/figma/key/status",
+      this.authController.getfigmaKeyStatus
+    );
+    this.app.get(
+      "/auth/figma/login",
+      this.authController.figmaLoginMiddleware,
+      this.authController.github()
+    );
 
     // All the route should be declared above this route.
     // The 404 Last Route.
