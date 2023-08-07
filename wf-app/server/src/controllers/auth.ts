@@ -1,23 +1,33 @@
 import { NextFunction, Response, Request } from "express";
 import passport, { PassportStatic } from "passport";
 import GitHubStrategy from "passport-github";
+import OAuth2Strategy from "passport-oauth2";
 import { UserGateway } from "../gateways/users.gateway";
 import { User } from "../types";
 import { AuthFigmaGateway } from "../gateways/auth.figma.gateway";
 import { AuthFigma } from "../usecases/authfigma.usecase";
+import { Options } from "../common/env";
 
+// AuthController is reponsible for login using Web Based  3rd party Figma Login & Plugin Based Login 
 export class AuthController {
   passport: PassportStatic;
   userGateway: UserGateway;
   authFigmaGateway: AuthFigmaGateway;
-  constructor(userGateway: UserGateway, authFigmaGateway: AuthFigmaGateway) {
+  private opts: Options;
+  constructor(userGateway: UserGateway, authFigmaGateway: AuthFigmaGateway, opts: Options) {
     this.userGateway = userGateway;
+    this.opts = opts;
     this.passport = passport.use(
-      new GitHubStrategy.Strategy(
+      new OAuth2Strategy.Strategy(
         {
-          clientID: "6142976f939897fe33a5",
-          clientSecret: "4e556615fa3c32c6f58d57e34af7808e247d6b43",
-          callbackURL: "http://localhost:8080/auth/github/callback",
+          // clientID: opts.outhClientID,
+          // clientSecret: opts.outhClientSecret,
+          // callbackURL: opts.outhCallbackUrl,
+          authorizationURL: 'https://www.figma.com/oauth',
+          tokenURL: 'https://www.figma.com/api/oauth/token',
+          clientID: "Qo5ypEUm5sUd6Zr1n9gEGI",
+          clientSecret: "xnIpweJ6Xqjf1JtE7dWx4wHRfuP2bt",
+          callbackURL: "http://127.0.0.1:8080/auth/figma/callback"
         },
         async function (
           accessToken: string,
@@ -26,25 +36,26 @@ export class AuthController {
           profile: any,
           done: any
         ) {
-          console.log(profile);
-          const id: string = profile.id || "";
-          const username: string = profile.username || "";
-          const email: string = profile._json.email || "";
-          console.log(`adding user ${id}-${username}-${email}`);
-          const user = await userGateway.findOrCreateUser(id, username, email);
+          console.log(JSON.stringify(profile));
+          // const id: string = profile.id || "";
+          // const username: string = profile.username || "";
+          // const email: string = profile._json.email || "";
+          // console.log(`adding user ${id}-${username}-${email}`);
+          const user = {}
+          // const user = await userGateway.findOrCreateUser(id, username, email);
           done(null, user);
         }
       )
     );
 
     this.passport.serializeUser(function (user: User, done) {
-      console.log(`serialise user: ${user}`);
-      done(null, user.id);
+      console.log(`serialise user: ${JSON.stringify(user)}`);
+      // done(null, user.id);
     });
     this.passport.deserializeUser(async function (id: string, done) {
       console.log(`deserilaise user id: ${id}`);
-      const user = await userGateway.findOrCreateUser(id, "", "");
-      done(null, user);
+      // const user = await userGateway.findOrCreateUser(id, "", "");
+      // done(null, user);
     });
 
     this.authFigmaGateway = authFigmaGateway;
@@ -73,6 +84,18 @@ export class AuthController {
       }
       res.redirect("/#/logout");
     });
+  };
+
+  figma = (): ((req: Request, res: Response) => void) => { 
+    return this.passport.authenticate("oauth2", { scope: ["files:read"], state: "asdfasdasgasdad" });
+  };
+
+  figmaCallbackMiddleware = (): ((
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => void) => {
+    return this.passport.authenticate("oauth2");
   };
 
   github = (): ((req: Request, res: Response) => void) => { 

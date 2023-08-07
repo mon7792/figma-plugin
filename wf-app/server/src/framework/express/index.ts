@@ -28,7 +28,7 @@ export default class ExpressApp {
   ) {
     this.app = express();
     this.todoController = new TodoController(todoGateway);
-    this.authController = new AuthController(userGateway, authFigmaGateway);
+    this.authController = new AuthController(userGateway, authFigmaGateway, opts);
     this.sessionStore = sessionStore;
     this.opts = opts;
   }
@@ -66,7 +66,7 @@ export default class ExpressApp {
     // auth routes
     this.app.get("/auth/login", this.authController.login);
     this.app.get("/auth/logout", this.authController.logout);
-    this.app.get("/auth/github", this.authController.github());
+    this.app.get("/auth/github", this.authController.f());
     this.app.get(
       "/auth/github/callback",
       this.authController.githubCallbackMiddleware(),
