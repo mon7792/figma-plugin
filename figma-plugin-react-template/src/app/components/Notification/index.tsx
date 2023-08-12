@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import './index.css';
+// import './index.css';
 
 type NotificationProps = {
   title: string;
