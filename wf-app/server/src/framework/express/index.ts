@@ -1,5 +1,5 @@
 import { json } from "body-parser";
-import express from "express";
+import express, { Request, Response } from "express";
 import { Options } from "../../common/env";
 import { ErrorHandler } from "./middleware/errors";
 import { TodoController } from "../../controllers/todos";
@@ -11,6 +11,7 @@ import { AuthHandler } from "./middleware/auth";
 import RedisStore from "connect-redis";
 import { AuthFigmaGateway } from "../../gateways/auth.figma.gateway";
 import cors from "cors";
+import { NextFunction } from "connect";
 
 export default class ExpressApp {
   private app: express.Application;
@@ -70,7 +71,7 @@ export default class ExpressApp {
     this.app.get("/auth/google", this.authController.google());
     this.app.get(
       "/auth/google/callback",
-      this.authController.googleCallbackMiddleware(),
+      this.authController.googCallbackMiddleware,
       this.authController.callback
     );
 
@@ -91,7 +92,7 @@ export default class ExpressApp {
     this.app.get(
       "/auth/figma/login",
       this.authController.figmaLoginMiddleware,
-      this.authController.github()
+      this.authController.googleLogin
     );
 
     // All the route should be declared above this route.

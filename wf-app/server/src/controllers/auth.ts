@@ -85,7 +85,20 @@ export class AuthController {
   google = (): ((req: Request, res: Response) => void) => {
     return this.passport.authenticate("google", {
       scope: ["email", "profile"],
+      passReqToCallback: true,
     });
+  };
+
+  googleLogin = (req: Request, res: Response, next: NextFunction) => {
+    const lKey: string = req.query.loginWKey as string || "";
+    const state = lKey;
+    console.log("login state:", state)
+    this.passport.authenticate("google", {
+      scope: ["email", "profile"],
+      passReqToCallback: true,
+      state,
+    })(req, res, next);
+    console.log("---> google login --->");
   };
 
   googleCallbackMiddleware = (): ((
@@ -93,21 +106,46 @@ export class AuthController {
     res: Response,
     next: NextFunction
   ) => void) => {
-
-    console.log("callback was fired")
-
     return this.passport.authenticate("google", {
       failureRedirect: "/auth/google/failure",
     });
+  };
+
+  // https://github.com/jaredhanson/passport-oauth2/issues/96
+  googCallbackMiddleware = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    
+    this.passport.authenticate("google", {
+      failureRedirect: "/auth/google/failure",
+    })(req, res, next);
   };
 
   github = (): ((req: Request, res: Response) => void) => {
     return this.passport.authenticate("github", { scope: ["user:email"] });
   };
 
+  callback = async (req: Request, res: Response) => {
+    // console.log("callback is fired", JSON.stringify(req.user));
+    console.log("login key: ", req.query.state);
+    const state: string = (req.query.state as string) || "";
+    console.log("callback state: ", state);
 
-  callback = (req: Request, res: Response) => {
-    console.log("callback is fired", JSON.stringify(req.user));
+    // check if the Auth Key Exists
+    const keyStatus = await this.authFigmaGateway.getKey(state);
+    // if (keyStatus.trim()==="") {
+    //   res.send("invalid login key, close the current tab and try again.");
+    //   return;
+    // }
+
+    console.log("------>fasdfsafadf")
+    // set the Wkey &Session ID
+    let sessionID =  req.session.id
+    await this.authFigmaGateway.setWriteKeySessionID(state, `myapp:${sessionID}`);
+
+    console.log("callback is fired", JSON.stringify(sessionID));
     res.redirect("/#/callback");
   };
 
@@ -167,15 +205,23 @@ export class AuthController {
 
     // get the session info associated with read key->write key-> session id
 
-    const result = await authFigma.checkSessionAuthenticated(
-      rKey,
-      "keyboard cat"
-    );
-    if (result === "") {
+    let result : string = ""
+    try {
+      result = await authFigma.checkSessionAuthenticated(
+        rKey,
+        "keyboard cat"
+      );
+      if (result === "") {
+        res.setHeader("Content-Type", "application/json");
+        res.send("not authenticated yet");
+        return;
+      }  
+    } catch (error: any) {
       res.setHeader("Content-Type", "application/json");
-      res.send("not authenticated yet");
+      res.send(`${error}`);
       return;
     }
+    
 
     // console.log("profile is un-secure");
     res.setHeader("Content-Type", "application/json");
@@ -202,7 +248,7 @@ export class AuthController {
     }
 
     // set the Wkey &Session ID
-    await authFigma.setWKeyAndSessionID(loginWkey, req.session.id);
+    // await authFigma.setWKeyAndSessionID(loginWkey, req.session.id);
     next();
   };
 }

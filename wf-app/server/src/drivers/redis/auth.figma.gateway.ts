@@ -10,16 +10,23 @@ export class AuthFigmaDriver implements AuthFigmaDriver {
   async setReadWriteKeys(rKey: string, wKey: string): Promise<void> {
     await this.rdClient.set(rKey, wKey);
     await this.rdClient.expire(rKey, 3000);
-    await this.rdClient.set(wKey, "");
+    await this.rdClient.set(wKey, "{}");
     await this.rdClient.expire(wKey, 3000);
+  }
+
+  async setWriteKeySessionID(wKey:string, sessionID:string):Promise<void>{
+    // await this.rdClient.del(wKey);
+    await this.rdClient.set(wKey, sessionID);
+    // await this.rdClient.expire(wKey, 3000);
   }
 
   async getKey(rKey: string): Promise<string> {
     const result = await this.rdClient.get(rKey)
     if (result === null){
-      throw Error("key does not exist")
+      console.log(`key: ${rKey} does not exist`)
+      throw Error(`key: ${rKey} does not exist`)
     }
-    return "";
+    return result;
   }
 
   async checkKeyExist(key: string): Promise<boolean> {

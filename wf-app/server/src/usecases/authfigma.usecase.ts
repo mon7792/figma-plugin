@@ -36,7 +36,7 @@ export class AuthFigma {
   }
 
   async setWKeyAndSessionID(wKey: string, sessionID: string): Promise<void> {
-    await this.authFigmaGateway.setReadWriteKeys(wKey, `app:${sessionID}`);
+    await this.authFigmaGateway.setReadWriteKeys(wKey, `myapp:${sessionID}`);
   }
 
   async checkSessionAuthenticated(
@@ -44,8 +44,12 @@ export class AuthFigma {
     secret: string
   ): Promise<string> {
     const wKey = await this.authFigmaGateway.getKey(rKey);
+    console.log(wKey)
     const sessionID = await this.authFigmaGateway.getKey(wKey);
-    const sessionInfo = await this.authFigmaGateway.getKey(`app:${sessionID}`);
+    console.log(sessionID)
+    // todo: here if the person has not clicked on signIN not session ID will exists
+    const sessionInfo = await this.authFigmaGateway.getKey(sessionID);
+    console.log(sessionInfo)
     const passportInfo = JSON.parse(sessionInfo)["passport"];
     if (typeof passportInfo === "undefined") {
       return "";
