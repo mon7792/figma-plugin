@@ -4,6 +4,7 @@ import '../styles/ui.css';
 import Login from './Login';
 import Notification from './Notification';
 import Generate from './Generate';
+import SvgSet from './SvgSet';
 
 function App() {
   const [login, setLogin] = React.useState<boolean>(true);
@@ -30,6 +31,7 @@ function App() {
     <div>
       <Notification  title='close this notification' isOpen={notification} setIsOpen={setNotification}/>
       <Generate />
+      <SvgSet />
     </div>
   );
 }
