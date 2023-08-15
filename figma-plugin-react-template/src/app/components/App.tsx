@@ -15,7 +15,13 @@ function App() {
     // This is how we read messages sent from the plugin controller
     window.onmessage = (event) => {
       const { type, message } = event.data.pluginMessage;
+      console.log("---> recevied",type, message )
       if (type === 'create-rectangles') {
+        console.log(`Figma Says: ${message}`);
+      }
+
+
+      if (type === 'generate-svg') {
         console.log(`Figma Says: ${message}`);
       }
     };
