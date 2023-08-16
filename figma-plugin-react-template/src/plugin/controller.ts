@@ -1,6 +1,6 @@
 figma.showUI(__html__, {width:400, height:600});
 
-figma.ui.onmessage = (msg) => {
+figma.ui.onmessage = async (msg) => {
   console.log(`${msg} recevied, ${msg.type}`)
   if (msg.type === 'create-rectangles') {
     const nodes = [];
@@ -27,7 +27,6 @@ figma.ui.onmessage = (msg) => {
   // Create a svg Node 
   if (msg.type === 'generate-svg') {
 
-    // call to the backend with search terms.
 
     // This is how figma responds back to the ui
     figma.ui.postMessage({

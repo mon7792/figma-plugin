@@ -5,15 +5,17 @@ import Login from './Login';
 import Notification from './Notification';
 import Generate from './Generate';
 import SvgSet from './SvgSet';
+import { postGenerateContent } from '../../api';
 
 function App() {
   const [login, setLogin] = React.useState<boolean>(true);
   const [notification, setNotification] = React.useState<boolean>(false);
+  const [svgImg, setSvgImg] = React.useState<Array<genSVG>>([]);
 
 
   React.useEffect(() => {
     // This is how we read messages sent from the plugin controller
-    window.onmessage = (event) => {
+    window.onmessage =  async (event) => {
       const { type, message } = event.data.pluginMessage;
       console.log("---> recevied",type, message )
       if (type === 'create-rectangles') {
@@ -23,6 +25,9 @@ function App() {
 
       if (type === 'generate-svg') {
         console.log(`Figma Says: ${message}`);
+        // call to the backend with search terms.
+        const result = await postGenerateContent("", message)
+        setSvgImg(result)
       }
     };
   }, []);
@@ -37,7 +42,7 @@ function App() {
     <div>
       <Notification  title='close this notification' isOpen={notification} setIsOpen={setNotification}/>
       <Generate />
-      <SvgSet />
+      <SvgSet images={svgImg}/>
     </div>
   );
 }

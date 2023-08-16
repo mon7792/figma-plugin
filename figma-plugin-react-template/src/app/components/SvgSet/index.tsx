@@ -1,27 +1,19 @@
 import React, { FunctionComponent } from 'react';
 
-//
 type SvgSetProps = {
-  images?: Array<string>;
+  images: Array<genSVG>;
 };
 
-// TODO: genImages will come from the api call
-const genImages: Array<string> = [
-  'https://fakeimg.pl/128x128',
-  'https://fakeimg.pl/128x128',
-  'https://fakeimg.pl/128x128',
-  'https://fakeimg.pl/128x128',
-];
-
-// ImageSet Components
-const SvgSet: FunctionComponent<SvgSetProps> = ({}) => {
+// SvgSet Components
+// TODO: make sure the image are scaled down keeping the aspect ratio.
+const SvgSet: FunctionComponent<SvgSetProps> = ({images}) => {
   return (
     <>
       <div className="grid grid-cols-2 gap-2">
-        {genImages.map((imgURL, i) => {
+        {images.map((img, i) => {
           return (
             <div key={i} className="flex justify-center">
-              <img src={imgURL} alt="img1" />
+              <img src={img.url} alt="img1" />
             </div>
           );
         })}
