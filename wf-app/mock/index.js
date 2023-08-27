@@ -26,10 +26,40 @@ let svgResp = [{
     url: "http://127.0.0.1:8080/svg/walk.svg"
 }]
 
+let keys = {
+  rKey: "read-dummy-key",
+  wKey: "write-dummy-key"
+}
+
+let user = {
+  key: "auth-key",
+  authenticated: true
+}
+
 app.use(cors())
 app.use('/svg', express.static('svg'))
 app.get('/', (req, res) => {
   res.send('Hello World!')
+})
+
+
+
+app.get('/login', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  res.send('{"login":true}')
+})
+
+app.get('/keys', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  res.send(keys)
+})
+
+app.get('/keys/status', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  setTimeout((() => {
+    res.send(user)
+  }), 2000)
+  
 })
 
 // generate get content in the body and return list of svg images

@@ -5,10 +5,10 @@ export type loginKeys = {
     wKey: string
 }
 
-export type user = {
-    key?: string
-    authenticated: boolean
-}
+// export type user = {
+//     key?: string
+//     authenticated: boolean
+// }
 
 // getLoginKeys returns the readKeys and writeKeys.
 export async function getLoginKeys():Promise<loginKeys>{
@@ -23,6 +23,11 @@ export async function getLoginStatus(rKey: string):Promise<user>{
     const response = await fetch(`${routes.loginStatus}?rKey=${rKey}`);
     const usr: user = await response.json() as user
     return usr
+}
+
+// getLoginUrl return the login url for with appropriate write key.
+export function getLoginUrl(wKey: string):string{
+  return `${routes.loginWindow}?wKey=${wKey}`
 }
 
 

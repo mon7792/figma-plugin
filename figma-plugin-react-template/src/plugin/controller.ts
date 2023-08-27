@@ -86,6 +86,22 @@ figma.ui.onmessage = async (msg) => {
     }
 
   // figma.closePlugin();
+
+  // user info
+  if (msg.type === "save-user") {
+    await figma.clientStorage.setAsync("user", msg.userInfo);
+  }
+
+  if (msg.type === "get-user") {
+    const resp = await figma.clientStorage.getAsync("user");
+    figma.ui.postMessage({
+      type: 'save-user',
+      message: resp,
+    });
+  }
+
+  
+
 };
 
 

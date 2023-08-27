@@ -8,3 +8,8 @@ type genSVG = {
   name: string
   url: string
 }
+
+type user = {
+  key: string
+  authenticated: boolean
+}

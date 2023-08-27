@@ -8,7 +8,7 @@ import SvgSet from './SvgSet';
 import { postGenerateContent } from '../../api';
 
 function App() {
-  const [login, setLogin] = React.useState<boolean>(true);
+  const [login, setLogin] = React.useState<boolean>(false);
   const [notification, setNotification] = React.useState<boolean>(false);
   const [svgImg, setSvgImg] = React.useState<Array<genSVG>>([]);
 
