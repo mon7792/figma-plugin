@@ -12,11 +12,13 @@ import RedisStore from "connect-redis";
 import { AuthFigmaGateway } from "../../gateways/auth.figma.gateway";
 import cors from "cors";
 import { NextFunction } from "connect";
+import { SVGController } from "../../controllers/svg";
 
 export default class ExpressApp {
   private app: express.Application;
   private opts: Options;
   private todoController: TodoController;
+  private svgController: SVGController;
   private authController: AuthController;
   private sessionStore: RedisStore;
 
@@ -28,6 +30,7 @@ export default class ExpressApp {
     opts: Options
   ) {
     this.app = express();
+    this.svgController = new SVGController();
     this.todoController = new TodoController(todoGateway);
     this.authController = new AuthController(
       userGateway,
@@ -63,6 +66,13 @@ export default class ExpressApp {
 
     //  json
     this.app.use(json());
+
+    // svg
+    // 
+    this.app.post("/api/svg", AuthHandler, this.svgController.addSVG);
+    this.app.get("/api/svg", AuthHandler, this.svgController.getSVG);
+    this.app.get("/api/svg/:id", AuthHandler, this.svgController.getSVGByID);
+
     this.app.get("/todo", AuthHandler, this.todoController.getTodos);
     this.app.post("/todo", AuthHandler, this.todoController.addTodo);
 
