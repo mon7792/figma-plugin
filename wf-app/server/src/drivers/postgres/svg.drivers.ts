@@ -2,24 +2,26 @@ import { Pool } from "pg";
 import { SVGResponse } from "../../types";
 import { SVGGateway } from "../../gateways/svg.gateway";
 
-// insert svg
+// insertSVGQuery docs
 const insertSVGQuery = `insert into svg(uid, prompt, user_id)
 select $1, $2, id
 from users
 where username=$3`
 
-// get svg
-const getSVGQuery = `select uid, prompt from svg
-inner join user
-where svg.user_id= user.id
-and username=$1`
+// getSVGQuery docs
+const getSVGQuery = `select svg.uid, svg.prompt, svg_response.gen_url as url from svg
+inner join users on users.id = svg.user_id
+left join svg_response on svg.id = svg_response.svg_id
+and users.username=$1`
 
-// id SERIAL PRIMARY KEY,
-// uid VARCHAR(11) UNIQUE NOT NULL,
-// prompt VARCHAR(500) NOT NULL,
-// generated BOOLEAN DEFAULT false,
-// created_at TIMESTAMP DEFAULT NOW(),
-// updated_at TIMESTAMP DEFAULT NOW(),
+// getSVGQuery docs
+const getSVGByIDQuery = `select svg.uid, svg.prompt, svg_response.gen_url as url from svg
+inner join users on users.id = svg.user_id
+left join svg_response on svg.id = svg_response.svg_id
+and users.username=$1
+and svg.uid=$2`
+
+
 
 // SVGDriver implements the SVG Functionality.
 export class SVGDriver implements SVGGateway {
@@ -30,9 +32,14 @@ export class SVGDriver implements SVGGateway {
   }
 
   // insertSVG creates a entry in svg table with unqiue id and prompt.
-  async insertSVG(uid: string, prompt: string,  userID: string): Promise<void> {
+  async insertSVG(uid: string, prompt: string, userID: string): Promise<void> {
     const values = [uid, prompt, userID];
-    await this.pgClient.query(insertSVGQuery, values);
+    try {
+      await this.pgClient.query(insertSVGQuery, values);
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
     return;
   }
 
@@ -44,41 +51,54 @@ export class SVGDriver implements SVGGateway {
       return []
     }
 
-    let resp: Array<SVGResponse> = [];
-    res.rows.forEach((elem) => {
-      resp.push({ id: elem.id, prompt: elem.prompt, url: [] });
-    });
-
-    return resp;
-  }
-  async getSVGByID(id: string): Promise<SVGResponse> {
-    return {
-      id: "",
-      prompt: "",
-      url: [],
-    };
+    let resp = this.getUIDSvgRespMap(res.rows)
+    return Array.from(resp.values());
   }
 
-  async getTodos(): Promise<void> {
-    const query = `select id, task, done from todo`;
-    const res = await this.pgClient.query(query);
+
+  // getSVGByID return single svg entry for particular user. 
+  async getSVGByID(userID: string, uid: string): Promise<SVGResponse> {
+    const values = [userID, uid];
+    const res = await this.pgClient.query(getSVGByIDQuery, values);
     if (res.rows.length === 0) {
-      return ;
+      throw Error("no such svg id exists")
     }
 
-    // let task: Array<TodoResponse> = [];
-    // res.rows.forEach((elem) => {
-    //   task.push({ id: elem.id, title: elem.task, done: elem.done });
-    // });
-
-    // return task;
+    let resp = this.getUIDSvgRespMap(res.rows)
+    return Array.from(resp.values())[0];
   }
 
-  async insertTodo(title: string): Promise<void> {
-    const query = `insert into todo(task) values($1)`;
 
-    const values = [title];
-    await this.pgClient.query(query, values);
-    return;
+  // getUIDSvgRespMap return map contains the unique values
+  private getUIDSvgRespMap(rows: Array<any>): Map<string, SVGResponse> {
+    let uidSvgResp: Map<string, SVGResponse> = new Map();
+    rows.forEach((elem) => {
+      // check if uid exists 
+      if (uidSvgResp.has(elem.uid)) {
+        let resp: SVGResponse = uidSvgResp.get(elem.uid) as SVGResponse
+        if (typeof resp === "undefined") {
+          // skip current iteration
+          return
+        }
+
+        if (elem.url !== null) {
+          resp.url.push(elem.url)
+          uidSvgResp.set(elem.uid, resp)
+        }
+
+        return
+      }
+
+      //  if uid doesnot exists, create a new entry.
+      let urls = []
+      if (elem.url !== null) {
+        urls.push(elem.url)
+      }
+
+      uidSvgResp.set(elem.uid, { id: elem.uid, prompt: elem.prompt, url: urls })
+    });
+
+    return uidSvgResp
   }
+
 }

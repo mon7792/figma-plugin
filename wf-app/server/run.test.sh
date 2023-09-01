@@ -1,0 +1,6 @@
+export WF_DB_HOST_NAME="127.0.0.1"
+export WF_DB_NAME="wf"
+export WF_DB_USER_NAME="postgres"
+export WF_DB_USER_PASSWORD="docker"
+export WF_ENV="LOCAL"
+export WF_DB_PORT_NO="5432"

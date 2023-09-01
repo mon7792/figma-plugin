@@ -4,5 +4,5 @@ import { SVGResponse } from "../types"
 export interface SVGGateway{
     insertSVG(uid: string, prompt: string, userID: string): Promise<void> 
     getSVG(userID: string): Promise<Array<SVGResponse>>
-    getSVGByID(id: string): Promise<SVGResponse>
+    getSVGByID(userID: string, uid: string): Promise<SVGResponse>
 }

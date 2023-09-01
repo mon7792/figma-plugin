@@ -53,4 +53,8 @@ CREATE TABLE svg_response (
 	  REFERENCES svg(id)
 );
 
+
+-- insert dummy user, if needed
+insert into users(username, email, google_id, google_username) values('dummy-user', 'dummy@gmail.com', 'dummy-user', 'dummy-user');
+
 ```
