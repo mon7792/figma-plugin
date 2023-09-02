@@ -4,9 +4,19 @@ import { Request, Response } from "express";
 export class SVGController {
   constructor() {}
 
-
   // addSVG creates an entry in db & generate the SVG Generation
   addSVG = async (req: Request, res: Response) => {
+    // 0. check if the user has enough credits
+
+    // 1. validate the svg prompt.
+  
+    // 2. send the request to ai api to get the response.
+
+    // 3. store the svg in google bucket.
+
+    // 4. add the svg entry and svg response entry
+    
+    // 5. return the response.
     res.sendStatus(200);
   };
 
